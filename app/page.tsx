@@ -1,17 +1,38 @@
-import ArtCollectionGrid from "@/components/art-collection-grid";
-import DepartmentFilter from "@/components/department-filters";
+import { ArtObjectCard } from "@/components/art-object-card";
+import { Container } from "@/components/container";
 import HeroSection from "@/components/hero-section";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import Image from "next/image";
-import { Suspense } from "react";
+import { Button } from "@/components/ui/button";
+import {
+	getObjectById,
+	getRandomFeaturedArtwork,
+	search,
+} from "@/lib/api/router";
+import { ArrowRightIcon } from "lucide-react";
+import Link from "next/link";
 
-export default function Home() {
+const ARTWORK_COUNT = 16;
+
+export const metadata = {
+	title: "Met Art Gallery",
+	description:
+		"Browse through thousands of artworks from the Metropolitan Museum of Art's vast collection.",
+};
+
+export default async function Home() {
+	const featuredArtwork = await getRandomFeaturedArtwork();
+
+	const { objectIDs } = await search({
+		q: "",
+		isHighlight: true,
+		hasImages: true,
+		isOnView: true,
+		limit: ARTWORK_COUNT,
+	});
+
 	return (
-		<main>
-			<HeroSection />
-
-			<div className="container mx-auto px-4 py-12">
+		<div>
+			<HeroSection object={featuredArtwork} />
+			<Container className="py-12 z-10">
 				<div className="space-y-8">
 					<div className="text-center space-y-2">
 						<h2 className="text-3xl font-serif font-bold tracking-tight">
@@ -22,55 +43,27 @@ export default function Home() {
 							of Art's vast collection.
 						</p>
 					</div>
-
-					<Tabs defaultValue="browse" className="w-full">
-						<TabsList className="grid w-full max-w-md mx-auto grid-cols-2 mb-8">
-							<TabsTrigger value="browse">Browse Collection</TabsTrigger>
-							<TabsTrigger value="departments">By Department</TabsTrigger>
-						</TabsList>
-
-						<TabsContent value="browse" className="space-y-6">
-							<Suspense fallback={<ArtCollectionSkeleton />}>
-								<ArtCollectionGrid />
-							</Suspense>
-						</TabsContent>
-
-						<TabsContent value="departments" className="space-y-6">
-							<Suspense fallback={<DepartmentFilterSkeleton />}>
-								<DepartmentFilter />
-							</Suspense>
-
-							<Suspense fallback={<ArtCollectionSkeleton />}>
-								<ArtCollectionGrid />
-							</Suspense>
-						</TabsContent>
-					</Tabs>
+					<div defaultValue="browse" className="w-full">
+						<div className="w-full h-full grid grid-cols-1 md:grid-cols-3 max-w-7xl mx-auto gap-4 relative">
+							{objectIDs.map(async (objectID) => {
+								const artwork = await getObjectById({ objectID });
+								// TODO: Handle error
+								return (
+									<ArtObjectCard key={artwork.objectID} object={artwork} />
+								);
+							})}
+						</div>
+					</div>
+					<div className="flex justify-center py-12">
+						<Button variant="outline" asChild>
+							<Link href="/search" prefetch>
+								Explore the full collection
+								<ArrowRightIcon />
+							</Link>
+						</Button>
+					</div>
 				</div>
-			</div>
-		</main>
-	);
-}
-
-function DepartmentFilterSkeleton() {
-	return (
-		<div className="w-full">
-			<Skeleton className="h-10 w-full max-w-xs mx-auto" />
-		</div>
-	);
-}
-
-function ArtCollectionSkeleton() {
-	return (
-		<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-			{Array(9)
-				.fill(0)
-				.map((_, i) => (
-					<div
-						// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-						key={i}
-						className="aspect-square bg-muted animate-pulse rounded-xl"
-					/>
-				))}
+			</Container>
 		</div>
 	);
 }

@@ -1,6 +1,13 @@
+import { BackButton } from "@/components/back-button";
+import { Container } from "@/components/container";
+import {
+	Breadcrumb,
+	BreadcrumbItem,
+	BreadcrumbLink,
+} from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { getObjectById } from "@/lib/api";
+import { getObject } from "@/lib/api-legacy";
 import { ArrowLeft, Calendar, Globe, Tag, User } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -10,34 +17,40 @@ import { Suspense } from "react";
 export default async function ObjectPage({
 	params,
 }: {
-	params: { objectId: string };
+	params: Promise<{ objectId: string }>;
 }) {
-	const objectId = Number.parseInt(params.objectId);
+	const pageParams = await params;
+	const objectId = Number.parseInt(pageParams.objectId);
 
 	if (Number.isNaN(objectId)) {
 		notFound();
 	}
 
 	return (
-		<main className="container mx-auto px-4 py-8">
+		<Container className="container mx-auto px-4 py-8">
+			<Breadcrumb className="mb-4">
+				<BreadcrumbItem>
+					<BreadcrumbLink asChild>
+						<Link href="/">Home</Link>
+					</BreadcrumbLink>
+				</BreadcrumbItem>
+				<BreadcrumbItem>
+					<BreadcrumbLink>Search Results</BreadcrumbLink>
+				</BreadcrumbItem>
+			</Breadcrumb>
 			<div className="mb-6">
-				<Button asChild variant="ghost" className="pl-0">
-					<Link href="/">
-						<ArrowLeft className="mr-2 h-4 w-4" />
-						Back to collection
-					</Link>
-				</Button>
+				<BackButton />
 			</div>
 
 			<Suspense fallback={<ObjectDetailSkeleton />}>
 				<ObjectDetail objectId={objectId} />
 			</Suspense>
-		</main>
+		</Container>
 	);
 }
 
 async function ObjectDetail({ objectId }: { objectId: number }) {
-	const object = await getObjectById(objectId);
+	const object = await getObject(objectId);
 
 	if (!object) {
 		notFound();
@@ -65,7 +78,7 @@ async function ObjectDetail({ objectId }: { objectId: number }) {
 
 				{object.additionalImages && object.additionalImages.length > 0 && (
 					<div className="grid grid-cols-4 gap-2">
-						{object.additionalImages.slice(0, 4).map((image, index) => (
+						{/* {object.additionalImages.slice(0, 4).map((image, index) => (
 							<div
 								// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
 								key={index}
@@ -79,7 +92,7 @@ async function ObjectDetail({ objectId }: { objectId: number }) {
 									sizes="(max-width: 768px) 25vw, 12vw"
 								/>
 							</div>
-						))}
+						))} */}
 					</div>
 				)}
 			</div>
@@ -126,12 +139,12 @@ async function ObjectDetail({ objectId }: { objectId: number }) {
 					)}
 				</div>
 
-				{object.objectDescription && (
+				{/* {object.objectDescription && (
 					<div className="space-y-2">
 						<h2 className="text-xl font-semibold">Description</h2>
 						<p className="text-muted-foreground">{object.objectDescription}</p>
 					</div>
-				)}
+				)} */}
 
 				{object.creditLine && (
 					<div className="space-y-2">

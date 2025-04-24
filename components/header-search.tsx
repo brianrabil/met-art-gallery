@@ -2,11 +2,8 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useOnClickOutside } from "@/hooks/use-click-outside";
 import { useDebounce } from "@/hooks/use-debounce";
-import { getObjectById, searchObjects } from "@/lib/api";
-import type { ArtObject } from "@/lib/types";
+import { type ObjectResponse, getObject, search } from "@/lib/api-legacy";
 import { cn } from "@/lib/utils";
 import { Loader2, Search, X } from "lucide-react";
 import Image from "next/image";
@@ -26,7 +23,7 @@ export default function HeaderSearch({
 	const [isOpen, setIsOpen] = useState(false);
 	const [query, setQuery] = useState("");
 	const [searchType, setSearchType] = useState<"title" | "id">("title");
-	const [results, setResults] = useState<ArtObject[]>([]);
+	const [results, setResults] = useState<ObjectResponse[]>([]);
 	const [loading, setLoading] = useState(false);
 	const debouncedQuery = useDebounce(query, 300);
 	const searchRef = useRef<HTMLDivElement>(null);
@@ -47,20 +44,24 @@ export default function HeaderSearch({
 				if (searchType === "id") {
 					const objectId = Number.parseInt(debouncedQuery);
 					if (!Number.isNaN(objectId)) {
-						const object = await getObjectById(objectId);
+						const object = await getObject(objectId);
 						setResults(object ? [object] : []);
 					} else {
 						setResults([]);
 					}
 				} else {
-					const objectIds = await searchObjects(debouncedQuery, false);
+					const result = await search({
+						q: debouncedQuery,
+					});
+
 					const objects = await Promise.all(
-						objectIds.slice(0, 5).map(async (id) => {
-							const object = await getObjectById(id);
+						result.objectIDs.slice(0, 5).map(async (id) => {
+							const object = await getObject(id);
 							return object;
 						}),
 					);
-					setResults(objects.filter(Boolean) as ArtObject[]);
+
+					setResults(objects.filter(Boolean) as ObjectResponse[]);
 				}
 			} catch (error) {
 				console.error("Error fetching search results:", error);
@@ -108,7 +109,7 @@ export default function HeaderSearch({
 
 				<div
 					className={cn(
-						"absolute top-full right-0 mt-2 w-screen max-w-sm bg-background border rounded-lg shadow-lg overflow-hidden transition-all duration-200 origin-top-right z-50 md:relative md:top-0 md:right-0 md:mt-0 md:w-auto md:min-w-[300px] md:border-0 md:shadow-none md:overflow-visible",
+						"absolute top-full right-0 mt-2 w-screen max-w-sm overflow-hidden transition-all duration-200 origin-top-right z-50 md:relative md:top-0 md:right-0 md:mt-0 md:w-auto md:min-w-[300px] md:border-0 md:shadow-none md:overflow-visible",
 						isOpen
 							? "scale-100 opacity-100"
 							: "scale-95 opacity-0 pointer-events-none md:scale-100 md:opacity-100 md:pointer-events-auto",
@@ -145,34 +146,11 @@ export default function HeaderSearch({
 								</Button>
 							)}
 						</div>
-						<Tabs
-							value={searchType}
-							onValueChange={(value) => setSearchType(value as "title" | "id")}
-							className="hidden md:flex ml-2"
-						>
-							<TabsList
-								className={cn(
-									"h-9",
-									isTransparent && !isOpen ? "bg-white/10 text-white" : "",
-								)}
-							>
-								<TabsTrigger value="title" className="text-xs px-2">
-									Title
-								</TabsTrigger>
-								<TabsTrigger value="id" className="text-xs px-2">
-									ID
-								</TabsTrigger>
-							</TabsList>
-						</Tabs>
 						<Button
 							type="submit"
+							variant="outline"
 							size="sm"
-							className={cn(
-								"ml-2",
-								isTransparent && !isOpen
-									? "bg-white text-foreground hover:bg-white/90"
-									: "",
-							)}
+							className={cn("ml-2")}
 						>
 							Search
 						</Button>
@@ -180,21 +158,6 @@ export default function HeaderSearch({
 
 					{isOpen && query.trim() && (
 						<div className="max-h-[70vh] overflow-y-auto border-t">
-							<div className="md:hidden p-2 border-b">
-								<Tabs
-									value={searchType}
-									onValueChange={(value) =>
-										setSearchType(value as "title" | "id")
-									}
-									className="w-full"
-								>
-									<TabsList className="grid w-full grid-cols-2">
-										<TabsTrigger value="title">Title</TabsTrigger>
-										<TabsTrigger value="id">ID</TabsTrigger>
-									</TabsList>
-								</Tabs>
-							</div>
-
 							{loading ? (
 								<div className="flex items-center justify-center p-4">
 									<Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
