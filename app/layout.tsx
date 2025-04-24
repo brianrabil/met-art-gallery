@@ -16,9 +16,22 @@ const playfair = Playfair_Display({
 	variable: "--font-serif",
 });
 
-export const metadata = {
-	title: "Meet the Met - Art Collection Explorer",
-	description: "Explore the Metropolitan Museum of Art's vast collection",
+export const metadata: Metadata = {
+	title: {
+		default: "Met Art Gallery",
+		template: "%s | Met Art Gallery",
+	},
+	description:
+		"Explore the vast collection of the Metropolitan Museum of Art. Browse artworks by department, medium, and time period, or search for specific pieces.",
+	// openGraph: {
+	//   title: 'Met Art Gallery',
+	//   description: 'Discover and explore the Metropolitan Museum of Art’s collection of artworks from around the world.',
+	//   images: ['https://your-site.com/default-image.jpg'],
+	// },
+	robots: "index, follow",
+	alternates: {
+		canonical: "https://met-art-gallery.vercel.app/",
+	},
 };
 
 export default function RootLayout({

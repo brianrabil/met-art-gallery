@@ -8,14 +8,25 @@ import {
 	search,
 } from "@/lib/api/router";
 import { ArrowRightIcon } from "lucide-react";
+import type { Metadata } from "next";
 import Link from "next/link";
 
 const ARTWORK_COUNT = 16;
 
-export const metadata = {
+export const metadata: Metadata = {
 	title: "Met Art Gallery",
 	description:
-		"Browse through thousands of artworks from the Metropolitan Museum of Art's vast collection.",
+		"Discover a curated selection of artworks from the Metropolitan Museum of Art. Explore featured pieces and browse the vast collection.",
+	// openGraph: {
+	// 	title: "Discover the Met Art Gallery",
+	// 	description:
+	// 		"Experience the Metropolitan Museum of Art’s collection with a stunning featured artwork and more to explore.",
+	// 	images: ["https://your-site.com/featured-artwork.jpg"],
+	// },
+	robots: "index, follow",
+	alternates: {
+		canonical: "https://met-art-gallery.vercel.app/",
+	},
 };
 
 export default async function Home() {

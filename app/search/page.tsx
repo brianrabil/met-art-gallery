@@ -11,6 +11,7 @@ import {
 	QueryClient,
 	dehydrate,
 } from "@tanstack/react-query";
+import type { Metadata } from "next";
 import Link from "next/link";
 import type { SearchParams } from "nuqs";
 import { createLoader } from "nuqs/server";
@@ -20,12 +21,23 @@ import { searchParamsParsers } from "./_search-params";
 import { SearchResults, SearchResultsSkeleton } from "./_search-results";
 import { Searchbar } from "./_searchbar";
 
-const loadSearchParams = createLoader(searchParamsParsers);
-
-export const metadata = {
-	title: "Search Results",
-	description: "Browse and filter search results on our site",
+export const metadata: Metadata = {
+	title: "Search the Collection - Met Art Gallery",
+	description:
+		"Search and filter through thousands of artworks from the Metropolitan Museum of Art's collection. Discover art by department, medium, time period, and more.",
+	// openGraph: {
+	// 	title: "Explore the Met Art Gallery Collection",
+	// 	description:
+	// 		"Dive into the vast collection of the Metropolitan Museum of Art. Search, filter, and discover artworks from different cultures and eras.",
+	// 	images: ["https://your-site.com/search-featured.jpg"],
+	// },
+	robots: "index, follow",
+	alternates: {
+		canonical: "https://met-art-gallery.vercel.app/search",
+	},
 };
+
+const loadSearchParams = createLoader(searchParamsParsers);
 
 export default async function SearchPage({
 	searchParams,
