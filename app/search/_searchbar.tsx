@@ -84,7 +84,7 @@ export function Searchbar() {
 										className="absolute size-5 right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground"
 										onClick={() => form.reset()}
 									>
-										<XIcon className="h-5 w-5" />
+										<XIcon className="size-5" />
 									</Button>
 								)}
 							</div>
