@@ -58,7 +58,7 @@ export function Header() {
 						<nav>
 							<ul className="flex space-x-6">
 								{[
-									{ name: "Browse Collection", href: "/search" },
+									{ name: "Explore Collection", href: "/search" },
 									// { name: "Departments", href: "/departments" },
 									// { name: "About", href: "/about" },
 								].map((item) => (
@@ -128,7 +128,7 @@ export function Header() {
 					<nav className="container mx-auto px-4 py-4">
 						<ul className="space-y-4">
 							{[
-								{ name: "Browse collection", href: "/search" },
+								{ name: "Explore collection", href: "/search" },
 								// { name: "Departments", href: "/departments" },
 								// { name: "About", href: "/about" },
 							].map((item) => (
