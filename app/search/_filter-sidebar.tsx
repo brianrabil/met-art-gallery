@@ -116,7 +116,7 @@ export function FilterSidebar({ isSheet = false }) {
 	return (
 		<div className={`${isSheet ? "" : "w-full lg:w-72 shrink-0"}`}>
 			<div className="flex items-center justify-between mb-4">
-				<h2 className="text-xl font-semibold">Filters</h2>
+				<h2 className="text-xl font-semibold font-serif">Filters</h2>
 				{getTotalActiveFilters() > 0 && (
 					<Button
 						variant="ghost"

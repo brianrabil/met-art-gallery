@@ -5,6 +5,7 @@ import {
 	ArtObjectCardSkeleton,
 } from "@/components/art-object-card";
 import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { orpc } from "@/lib/api/client";
 import { context } from "@/lib/api/context";
@@ -13,6 +14,7 @@ import {
 	useSuspenseInfiniteQuery,
 	useSuspenseQuery,
 } from "@tanstack/react-query";
+import { useStore } from "@tanstack/react-store";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { BoxIcon } from "lucide-react";
 import { useQueryStates } from "nuqs";
@@ -30,6 +32,7 @@ export function SearchResults() {
 		hasNextPage,
 		isFetchingNextPage,
 		isFetching,
+		isLoading,
 		status,
 		isPending,
 		error,
@@ -102,7 +105,7 @@ export function SearchResults() {
 
 	return (
 		<div>
-			{isPending ? (
+			{/* {isPending ? (
 				<p>Loading...</p>
 			) : status === "error" ? (
 				<span>Error: {error?.message}</span>
@@ -193,20 +196,11 @@ export function SearchResults() {
 			)}
 			<div>
 				{isFetching && !isFetchingNextPage ? "Background Updating..." : null}
-			</div>
-			{/* <div
-				ref={parentRef}
-				className="h-full w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 overflow-y-scroll"
-			>
-				<div
-					style={{
-						height: `${rowVirtualizer.getTotalSize()}px`,
-						width: "100%",
-						position: "relative",
-					}}
-				>
-					{data?.pages.map(({ objectIDs, page }) => (
-						<>
+			</div> */}
+			<div className="h-full w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+				{data?.pages.map(({ objectIDs, page }) => (
+					<>
+						{page > 0 ? (
 							<div
 								key={page}
 								className="flex items-center gap-4 col-span-1 md:col-span-2 lg:col-span-3"
@@ -219,16 +213,16 @@ export function SearchResults() {
 									<Separator className="flex-1" />
 								</div>
 							</div>
-							{objectIDs.map((objectID) => (
-								<Suspense key={objectID} fallback={<ArtObjectCardSkeleton />}>
-									<SuspensedArtObjectCard key={objectID} objectID={objectID} />
-								</Suspense>
-							))}
-						</>
-					))}
-					<Button onClick={() => fetchNextPage()}>Load More</Button>
-				</div>
-			</div> */}
+						) : null}
+						{objectIDs.map((objectID) => (
+							<Suspense key={objectID} fallback={<ArtObjectCardSkeleton />}>
+								<SuspensedArtObjectCard key={objectID} objectID={objectID} />
+							</Suspense>
+						))}
+					</>
+				))}
+				<Button onClick={() => fetchNextPage()}>Load More</Button>
+			</div>
 		</div>
 	);
 }

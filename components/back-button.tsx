@@ -12,8 +12,12 @@ export function BackButton({
 	const router = useRouter();
 
 	return (
-		<Button onClick={() => router.back()} variant="ghost" className="pl-0">
-			<ArrowLeftIcon className="mr-2 h-4 w-4" />
+		<Button
+			onClick={() => router.back()}
+			variant="ghost"
+			className="cursor-pointer text-muted-foreground hover:text-foreground"
+		>
+			<ArrowLeftIcon className="h-4 w-4" />
 			{children}
 		</Button>
 	);

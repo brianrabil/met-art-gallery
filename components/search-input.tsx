@@ -12,7 +12,6 @@ export function SearchInput({ isTransparent }: { isTransparent?: boolean }) {
 	const router = useRouter();
 	const [searchParams, setSearchParams] = useQueryStates(searchParamsParsers);
 
-	// Lower-level useDebouncer hook - requires you to manage your own state
 	const setSearchDebouncer = useDebouncer(
 		async (q) => {
 			await setSearchParams({ q });

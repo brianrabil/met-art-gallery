@@ -70,6 +70,7 @@ export function ArtObjectCard({
 						<Link
 							href={`/object/${object.objectID}`}
 							className="flex items-center gap-1"
+							prefetch
 						>
 							Details
 							<ArrowRight className="h-3.5 w-3.5" />

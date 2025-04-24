@@ -14,6 +14,7 @@ export function Header() {
 	const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 	const pathname = usePathname();
 	const isHomePage = pathname === "/";
+	const isSearchPage = pathname === "/search";
 
 	// Handle scroll effect for transparent header
 	useEffect(() => {
@@ -33,7 +34,7 @@ export function Header() {
 		<header
 			className={cn(
 				"fixed top-0 left-0 right-0 z-50 transition-all duration-300",
-				isScrolled || !isHomePage
+				isScrolled || (!isHomePage && !isSearchPage)
 					? "bg-background/95 backdrop-blur-sm border-b"
 					: "bg-transparent border-transparent",
 			)}
