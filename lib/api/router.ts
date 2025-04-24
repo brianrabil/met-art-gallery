@@ -1,5 +1,6 @@
 import { context } from "@/lib/api/context";
 import {
+	departmentsSchema,
 	objectSchema,
 	objectsInputSchema,
 	objectsOutputSchema,
@@ -14,7 +15,6 @@ import {
 	parseAsString,
 } from "nuqs/server";
 import { z } from "zod";
-import { departmentsSchema } from "../validators";
 
 const base = os.$context<typeof context>();
 
@@ -26,7 +26,13 @@ export const getObjectById = base
 	)
 	.output(objectSchema)
 	.handler(async ({ context, input }) => {
-		const res = await fetch(`${context.api.objects}/${input.objectID}`);
+		const res = await fetch(`${context.api.objects}/${input.objectID}`, {
+			next: {
+				tags: ["object", `${input.objectID}`],
+				// Revalidate at most after 1 hour
+				revalidate: 3600,
+			},
+		});
 		const data = await res.json();
 		return data;
 	})
@@ -38,7 +44,13 @@ export const getObjects = base
 	.input(objectsInputSchema)
 	.output(objectsOutputSchema)
 	.handler(async ({ context, input }) => {
-		const res = await fetch(`${context.api.objects}`);
+		const res = await fetch(`${context.api.objects}`, {
+			next: {
+				tags: ["objects"],
+				// Revalidate at most after 1 hour
+				revalidate: 3600,
+			},
+		});
 		const data = await res.json();
 		return data;
 	})
@@ -107,13 +119,15 @@ export const search = base
 			});
 
 			const response = await fetch(url, {
-				headers: {
-					Accept: "application/json",
+				next: {
+					tags: ["search", url],
+					// Revalidate at most after 1 hour
+					revalidate: 3600,
 				},
 			});
 
 			if (!response.ok) {
-				throw new Error(
+				throw new ORPCError(
 					`MET API request failed with status ${response.status}`,
 				);
 			}
@@ -153,7 +167,7 @@ export const search = base
 			};
 		} catch (error) {
 			console.error("Search route error:", error);
-			throw new Error("Failed to fetch search results");
+			throw new ORPCError("Failed to fetch search results");
 		}
 	})
 	.callable({
@@ -182,7 +196,6 @@ export const getRandomFeaturedArtwork = base
 				435809, // View of Toledo - El Greco
 			];
 
-			// Get a random ID from the featured list
 			const dayOfWeek = new Date().getDay(); // 0 (Sunday) to 6 (Saturday)
 			const randomId =
 				featuredArtworkIds[dayOfWeek % featuredArtworkIds.length];
@@ -202,47 +215,21 @@ export const getRandomFeaturedArtwork = base
 		context,
 	});
 
-// // Get all unique periods across departments
-// export async function getAllPeriods(): Promise<string[]> {
-// 	try {
-// 		const departments = await getDetailedDepartments();
-// 		const allPeriods = new Set<string>();
-
-// 		departments.forEach((dept) => {
-// 			dept.periods.forEach((period) => {
-// 				allPeriods.add(period);
-// 			});
-// 		});
-
-// 		return Array.from(allPeriods).sort();
-// 	} catch (error) {
-// 		console.error("Error fetching periods:", error);
-// 		return [];
-// 	}
-// }
-
 export const getDepartments = base
 	.output(departmentsSchema)
-	.handler(async ({ context, input }) => {
+	.handler(async ({ context }) => {
 		const res = await fetch(`${context.api.departments}`);
 		const data = await res.json();
 		return data;
 	});
 
-// // Get a random featured artwork (with image)
-// export async function _getRandomFeaturedArtwork(): Promise<ArtObject | null> {}
+export const getSearchFilterOptions = base.handler(async ({ context }) => {
+	const collection = await fetch(`${context.api.objects}`, {
+		cache: "force-cache",
+	});
 
-export const getSearchFilterOptions = base.handler(
-	async ({ context, input }) => {
-		const collection = await fetch(`${context.api.objects}`, {
-			cache: "force-cache",
-		});
-
-		console.log(collection);
-
-		return collection;
-	},
-);
+	return collection;
+});
 
 export const router = {
 	search,

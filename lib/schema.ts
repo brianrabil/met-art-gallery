@@ -168,3 +168,17 @@ export const objectsOutputSchema = z.object({
 	total: z.number().int(),
 	items: z.array(objectSchema),
 });
+
+// Schema for the Departments endpoint (/public/collection/v1/departments)
+export const departmentsSchema = z
+	.object({
+		departments: z.array(
+			z
+				.object({
+					departmentId: z.number().int(),
+					displayName: z.string(),
+				})
+				.nullable(),
+		),
+	})
+	.nullable();

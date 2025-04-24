@@ -22,6 +22,11 @@ import { Searchbar } from "./_searchbar";
 
 const loadSearchParams = createLoader(searchParamsParsers);
 
+export const metadata = {
+	title: "Search Results",
+	description: "Browse and filter search results on our site",
+};
+
 export default async function SearchPage({
 	searchParams,
 }: {
