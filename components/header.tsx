@@ -13,13 +13,12 @@ import { cn } from "@/lib/utils";
 import { Store, useStore } from "@tanstack/react-store";
 import { MenuIcon } from "lucide-react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 import { Separator } from "./ui/separator";
 
-const store = new Store({
+const store = new Store<{ isScrolled: boolean }>({
 	isScrolled: false,
-	isMobileMenuOpen: false,
 });
 
 const navItems = [{ name: "Explore collection", href: "/search" }];
@@ -40,7 +39,7 @@ export function Header() {
 			} else {
 				store.setState((state) => ({
 					...state,
-					isSCrolled: false,
+					isScrolled: false,
 				}));
 			}
 		};
