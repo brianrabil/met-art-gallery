@@ -1,8 +1,11 @@
 import { objectSchemaKeys } from "@/lib/schema";
-import { createSerializer, parseAsStringEnum, useQueryStates } from "nuqs";
-import { parseAsBoolean, parseAsInteger, parseAsString } from "nuqs";
+import {
+	parseAsBoolean,
+	parseAsInteger,
+	parseAsString,
+	parseAsStringEnum,
+} from "nuqs/server";
 
-// Define parsers for each search parameter
 export const searchParamsParsers = {
 	q: parseAsString.withDefault("").withOptions({
 		clearOnDefault: false,
@@ -23,11 +26,3 @@ export const searchParamsParsers = {
 	direction: parseAsStringEnum(["asc", "desc"]).withDefault("desc"),
 	field: parseAsStringEnum(objectSchemaKeys),
 };
-
-// Create a serializer for the search parameters
-// export const serializeSearchParams = createSerializer(searchParamsParsers);
-export function useSearchParams() {
-	return useQueryStates(searchParamsParsers);
-}
-
-export const serialize = createSerializer(searchParamsParsers);

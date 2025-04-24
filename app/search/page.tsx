@@ -5,7 +5,6 @@ import {
 	BreadcrumbLink,
 } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
-import { loadSearchParams } from "@/lib/search-params";
 import {
 	HydrationBoundary,
 	QueryClient,
@@ -14,9 +13,13 @@ import {
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import type { SearchParams } from "nuqs";
+import { createLoader } from "nuqs/server";
 import { Suspense } from "react";
-import { FilterSidebar, FilterSidebarSkeleton } from "./filter-sidebar";
-import { SearchResults, SearchResultsSkeleton } from "./search-results";
+import { FilterSidebar, FilterSidebarSkeleton } from "./_filter-sidebar";
+import { searchParamsParsers } from "./_search-params";
+import { SearchResults, SearchResultsSkeleton } from "./_search-results";
+
+const loadSearchParams = createLoader(searchParamsParsers);
 
 export default async function SearchPage({
 	searchParams,
@@ -24,7 +27,6 @@ export default async function SearchPage({
 	searchParams: Promise<SearchParams>;
 }) {
 	const queryParams = await loadSearchParams(searchParams);
-
 	const queryClient = new QueryClient();
 	const dehydratedState = dehydrate(queryClient);
 

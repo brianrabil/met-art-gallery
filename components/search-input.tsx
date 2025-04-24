@@ -1,17 +1,21 @@
+import { searchParamsParsers } from "@/app/search/_search-params";
 import { Input } from "@/components/ui/input";
-import { serialize, useSearchParams } from "@/hooks/use-search-params";
 import { cn } from "@/lib/utils";
 import { useForm } from "@tanstack/react-form";
 import { useDebouncer } from "@tanstack/react-pacer";
 import { useRouter } from "next/navigation";
+import { createSerializer, useQueryStates } from "nuqs";
+
+const serialize = createSerializer(searchParamsParsers);
 
 export function SearchInput({ isTransparent }: { isTransparent?: boolean }) {
 	const router = useRouter();
-	const [searchParams] = useSearchParams();
+	const [searchParams, setSearchParams] = useQueryStates(searchParamsParsers);
 
 	// Lower-level useDebouncer hook - requires you to manage your own state
 	const setSearchDebouncer = useDebouncer(
 		async (q) => {
+			await setSearchParams({ q });
 			const route = serialize("/search", { q, offset: 0 });
 			router.push(route);
 		},
@@ -24,11 +28,7 @@ export function SearchInput({ isTransparent }: { isTransparent?: boolean }) {
 		defaultValues: {
 			query: searchParams.q ?? "",
 		},
-		onSubmit: async ({ value }) => {
-			// Do something with form data
-			console.log(value);
-			setSearchDebouncer.maybeExecute(value.query);
-		},
+		onSubmit: async ({ value }) => setSearchDebouncer.maybeExecute(value.query),
 	});
 
 	return (

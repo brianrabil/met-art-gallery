@@ -1,13 +1,12 @@
 "use client";
+
 import {
 	ArtObjectCard,
 	ArtObjectCardSkeleton,
 } from "@/components/art-object-card";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
-import { serialize, useSearchParams } from "@/hooks/use-search-params";
-import { client, orpc } from "@/lib/api/client";
+import { orpc } from "@/lib/api/client";
 import { context } from "@/lib/api/context";
 import { getObjectById } from "@/lib/api/router";
 import {
@@ -16,61 +15,14 @@ import {
 } from "@tanstack/react-query";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { BoxIcon } from "lucide-react";
+import { useQueryStates } from "nuqs";
 import { Suspense, useEffect, useRef } from "react";
 import { PAGE_SIZE } from "./_config";
+import { searchParamsParsers } from "./_search-params";
 
-function MasonryVerticalVirtualizerVariable({ rows }: { rows: Array<number> }) {
-	const parentRef = useRef<HTMLDivElement>(null);
-
-	const rowVirtualizer = useVirtualizer({
-		count: rows.length,
-		getScrollElement: () => parentRef.current,
-		estimateSize: (i) => rows[i],
-		overscan: 8,
-		lanes: 4,
-	});
-
-	return (
-		<>
-			<div
-				ref={parentRef}
-				className="List"
-				style={{
-					height: "200px",
-					width: "400px",
-					overflow: "auto",
-				}}
-			>
-				<div
-					style={{
-						height: `${rowVirtualizer.getTotalSize()}px`,
-						width: "100%",
-						position: "relative",
-					}}
-				>
-					{rowVirtualizer.getVirtualItems().map((virtualRow) => (
-						<div
-							key={virtualRow.index}
-							className={virtualRow.index % 2 ? "ListItemOdd" : "ListItemEven"}
-							style={{
-								position: "absolute",
-								top: 0,
-								left: `${virtualRow.lane * 25}%`,
-								width: "25%",
-								height: `${rows[virtualRow.index]}px`,
-								transform: `translateY(${virtualRow.start}px)`,
-							}}
-						>
-							Row {virtualRow.index}
-						</div>
-					))}
-				</div>
-			</div>
-		</>
-	);
-}
 export function SearchResults() {
-	const [{ limit, offset, ...searchParams }] = useSearchParams();
+	const [{ limit, offset, ...searchParams }] =
+		useQueryStates(searchParamsParsers);
 
 	const {
 		data,
@@ -324,5 +276,56 @@ export function SearchResultsSkeleton() {
 					</div>
 				))}
 		</div>
+	);
+}
+
+function MasonryVerticalVirtualizerVariable({ rows }: { rows: Array<number> }) {
+	const parentRef = useRef<HTMLDivElement>(null);
+
+	const rowVirtualizer = useVirtualizer({
+		count: rows.length,
+		getScrollElement: () => parentRef.current,
+		estimateSize: (i) => rows[i],
+		overscan: 8,
+		lanes: 4,
+	});
+
+	return (
+		<>
+			<div
+				ref={parentRef}
+				className="List"
+				style={{
+					height: "200px",
+					width: "400px",
+					overflow: "auto",
+				}}
+			>
+				<div
+					style={{
+						height: `${rowVirtualizer.getTotalSize()}px`,
+						width: "100%",
+						position: "relative",
+					}}
+				>
+					{rowVirtualizer.getVirtualItems().map((virtualRow) => (
+						<div
+							key={virtualRow.index}
+							className={virtualRow.index % 2 ? "ListItemOdd" : "ListItemEven"}
+							style={{
+								position: "absolute",
+								top: 0,
+								left: `${virtualRow.lane * 25}%`,
+								width: "25%",
+								height: `${rows[virtualRow.index]}px`,
+								transform: `translateY(${virtualRow.start}px)`,
+							}}
+						>
+							Row {virtualRow.index}
+						</div>
+					))}
+				</div>
+			</div>
+		</>
 	);
 }

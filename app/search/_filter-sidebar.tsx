@@ -1,4 +1,5 @@
 "use client";
+
 import {
 	Accordion,
 	AccordionContent,
@@ -10,14 +11,14 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Separator } from "@/components/ui/separator";
-import { Skeleton } from "@/components/ui/skeleton"; // Assuming you have a Skeleton component from your UI library
-import { useSearchParams } from "@/hooks/use-search-params";
+import { Skeleton } from "@/components/ui/skeleton";
 import { orpc } from "@/lib/api/client";
 import { useForm } from "@tanstack/react-form";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { XIcon } from "lucide-react";
+import { useQueryStates } from "nuqs";
+import { searchParamsParsers } from "./_search-params";
 
-// Time periods for filtering
 const TIME_PERIODS = [
 	{ label: "Ancient (before 500 CE)", startDate: 0, endDate: 500 },
 	{ label: "Medieval (500-1400)", startDate: 500, endDate: 1400 },
@@ -31,7 +32,7 @@ const TIME_PERIODS = [
 	},
 ];
 
-// Mediums for filtering
+// TODO: We can build this dynamically
 const MEDIUMS = [
 	"Oil on canvas",
 	"Watercolor",
@@ -46,7 +47,7 @@ const MEDIUMS = [
 ];
 
 export function FilterSidebar({ isSheet = false }) {
-	const [searchParams, setSearchParams] = useSearchParams();
+	const [searchParams, setSearchParams] = useQueryStates(searchParamsParsers);
 
 	const { data: departments } = useSuspenseQuery(
 		orpc.getDepartments.queryOptions(),
@@ -62,7 +63,6 @@ export function FilterSidebar({ isSheet = false }) {
 		},
 	});
 
-	// Clear all filters
 	const clearAllFilters = () => {
 		setSearchParams({
 			artistOrCulture: null,
@@ -70,15 +70,9 @@ export function FilterSidebar({ isSheet = false }) {
 			dateBegin: null,
 			dateEnd: null,
 			medium: null,
+			geoLocation: null,
 		});
 	};
-
-	// Count total active filters
-	const totalActiveFilters =
-		// activeFilters.timePeriods.length +
-		// activeFilters.departments.length +
-		// activeFilters.mediums.length;
-		0;
 
 	function getPeriodValue(dateBegin: number | null, dateEnd: number | null) {
 		return (
@@ -102,11 +96,28 @@ export function FilterSidebar({ isSheet = false }) {
 		return "all";
 	}
 
+	function getTotalActiveFilters() {
+		let count = 0;
+		const filters = [
+			getPeriodValue(searchParams.dateBegin, searchParams.dateEnd),
+			getDepartmentValue(searchParams.departmentId),
+			getMediumValue(searchParams.medium),
+		];
+
+		for (const filter of filters) {
+			if (filter.toLocaleLowerCase().trim() !== "all") {
+				count++;
+			}
+		}
+
+		return count;
+	}
+
 	return (
 		<div className={`${isSheet ? "" : "w-full lg:w-72 shrink-0"}`}>
 			<div className="flex items-center justify-between mb-4">
 				<h2 className="text-xl font-semibold">Filters</h2>
-				{totalActiveFilters > 0 && (
+				{getTotalActiveFilters() > 0 && (
 					<Button
 						variant="ghost"
 						size="sm"
