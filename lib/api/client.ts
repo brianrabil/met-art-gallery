@@ -4,8 +4,17 @@ import { RPCLink } from "@orpc/client/fetch";
 import { createORPCReactQueryUtils } from "@orpc/react-query";
 import type { RouterClient } from "@orpc/server";
 
+function getUrl() {
+	const base = (() => {
+		if (typeof window !== "undefined") return "";
+		if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
+		return "http://localhost:3000";
+	})();
+	return `${base}/rpc`;
+}
+
 const link = new RPCLink({
-	url: "http://localhost:3000/rpc",
+	url: getUrl(),
 });
 
 // Create a client for your router
