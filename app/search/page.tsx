@@ -1,4 +1,6 @@
 import { Container } from "@/components/container";
+import { ModeToggle } from "@/components/mode-toggle";
+import { SearchInput } from "@/components/search-input";
 import {
 	Breadcrumb,
 	BreadcrumbItem,
@@ -6,11 +8,21 @@ import {
 	BreadcrumbList,
 	BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import {
+	Sheet,
+	SheetContent,
+	SheetHeader,
+	SheetTrigger,
+} from "@/components/ui/sheet";
+import { cn } from "@/lib/utils";
 import {
 	HydrationBoundary,
 	QueryClient,
 	dehydrate,
 } from "@tanstack/react-query";
+import { FilterIcon, MenuIcon } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import type { SearchParams } from "nuqs";
@@ -71,11 +83,16 @@ export default async function SearchPage({
 								</BreadcrumbList>
 							</Breadcrumb>
 						</div>
-						<Searchbar />
+						<div className="flex items-end gap-2">
+							<Searchbar />
+							<div className="lg:hidden">
+								<MobileFilters />
+							</div>
+						</div>
 					</Container>
 				</section>
 				<Container className="flex gap-6">
-					<div className="hidden md:block w-72 flex-shrink-0">
+					<div className="hidden lg:block w-72 flex-shrink-0">
 						<div className="sticky top-24">
 							<Suspense fallback={<FilterSidebarSkeleton />}>
 								<FilterSidebar />
@@ -90,5 +107,22 @@ export default async function SearchPage({
 				</Container>
 			</div>
 		</HydrationBoundary>
+	);
+}
+
+function MobileFilters() {
+	return (
+		<Sheet>
+			<SheetTrigger asChild>
+				<Button variant="outline" size="icon">
+					<FilterIcon className="size-4" />
+				</Button>
+			</SheetTrigger>
+			<SheetContent className="max-h-screen overflow-y-auto pt-8">
+				<Container>
+					<FilterSidebar />
+				</Container>
+			</SheetContent>
+		</Sheet>
 	);
 }

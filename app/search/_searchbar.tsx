@@ -65,7 +65,7 @@ export function Searchbar() {
 									name={field.name}
 									value={field.state.value}
 									placeholder="Search artworks, artists, or exhibitions..."
-									className="pl-10 pr-4 py-3 bg-background h-auto rounded-l-lg rounded-r-none text-xl border-r-0"
+									className="pl-10 pr-4 bg-background rounded-l-lg rounded-r-none h-full border-r-0"
 									onBlur={field.handleBlur}
 									onChange={(e) => field.handleChange(e.target.value)}
 									onKeyDown={(e) => {
