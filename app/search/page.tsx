@@ -5,7 +5,6 @@ import {
 	BreadcrumbLink,
 } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
 import { loadSearchParams } from "@/lib/search-params";
 import {
 	HydrationBoundary,
@@ -16,9 +15,8 @@ import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import type { SearchParams } from "nuqs";
 import { Suspense } from "react";
-import { PAGE_SIZE } from "./_config";
-import { FilterSidebar } from "./filter-sidebar";
-import { SearchResults } from "./search-results";
+import { FilterSidebar, FilterSidebarSkeleton } from "./filter-sidebar";
+import { SearchResults, SearchResultsSkeleton } from "./search-results";
 
 export default async function SearchPage({
 	searchParams,
@@ -64,7 +62,7 @@ export default async function SearchPage({
 					</div>
 					<div className="flex gap-6">
 						<div>
-							<Suspense fallback={<SearchResultsSkeleton />}>
+							<Suspense fallback={<FilterSidebarSkeleton />}>
 								<FilterSidebar />
 							</Suspense>
 						</div>
@@ -77,22 +75,5 @@ export default async function SearchPage({
 				</div>
 			</Container>
 		</HydrationBoundary>
-	);
-}
-
-function SearchResultsSkeleton() {
-	return (
-		<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-			{Array(PAGE_SIZE)
-				.fill(0)
-				.map((_, i) => (
-					// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-					<div key={i} className="space-y-3">
-						<Skeleton className="h-[200px] w-full rounded-lg" />
-						<Skeleton className="h-4 w-3/4" />
-						<Skeleton className="h-4 w-1/2" />
-					</div>
-				))}
-		</div>
 	);
 }

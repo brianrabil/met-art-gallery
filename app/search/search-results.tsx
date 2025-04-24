@@ -5,6 +5,7 @@ import {
 } from "@/components/art-object-card";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { Skeleton } from "@/components/ui/skeleton";
 import { serialize, useSearchParams } from "@/hooks/use-search-params";
 import { client, orpc } from "@/lib/api/client";
 import { context } from "@/lib/api/context";
@@ -307,4 +308,21 @@ function SuspensedArtObjectCard({
 			}),
 	});
 	return <ArtObjectCard style={style} object={object} />;
+}
+
+export function SearchResultsSkeleton() {
+	return (
+		<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+			{Array(PAGE_SIZE)
+				.fill(0)
+				.map((_, i) => (
+					// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+					<div key={i} className="space-y-3">
+						<Skeleton className="h-[200px] w-full rounded-lg" />
+						<Skeleton className="h-4 w-3/4" />
+						<Skeleton className="h-4 w-1/2" />
+					</div>
+				))}
+		</div>
+	);
 }
