@@ -60,11 +60,11 @@ export default function HeroSection({
 									<ArrowRight className="ml-2 h-4 w-4" />
 								</Button>
 							</Link>
-							<Link passHref href="/departments">
+							{/* <Link passHref href="/departments">
 								<Button className="bg-transparent" variant="outline" size="lg">
 									Browse Departments
 								</Button>
-							</Link>
+							</Link> */}
 						</div>
 					</div>
 

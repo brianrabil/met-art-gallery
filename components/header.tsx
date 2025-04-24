@@ -1,6 +1,7 @@
 "use client";
 
 import { Container } from "@/components/container";
+import { ModeToggle } from "@/components/mode-toggle";
 import { SearchInput } from "@/components/search-input";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -16,7 +17,6 @@ export function Header() {
 	const isHomePage = pathname === "/";
 	const isSearchPage = pathname === "/search";
 
-	// Handle scroll effect for transparent header
 	useEffect(() => {
 		const handleScroll = () => {
 			if (window.scrollY > 10) {
@@ -58,9 +58,9 @@ export function Header() {
 						<nav>
 							<ul className="flex space-x-6">
 								{[
-									{ name: "Collection", href: "/search" },
-									{ name: "Departments", href: "/departments" },
-									{ name: "About", href: "/about" },
+									{ name: "Browse Collection", href: "/search" },
+									// { name: "Departments", href: "/departments" },
+									// { name: "About", href: "/about" },
 								].map((item) => (
 									<li key={item.name}>
 										<Link
@@ -81,11 +81,24 @@ export function Header() {
 						</nav>
 
 						{/* Desktop Search */}
-						<SearchInput isTransparent={!isScrolled && isHomePage} />
+						<div className="flex gap-x-2">
+							<SearchInput isTransparent={!isScrolled && isHomePage} />
+							<div className="opacity-75">
+								<ModeToggle
+									className={cn(
+										isScrolled || !isHomePage
+											? "text-foreground"
+											: "text-white",
+										"hover:text-primary",
+									)}
+								/>
+							</div>
+						</div>
 					</div>
 
 					{/* Mobile Menu Button */}
 					<div className="flex items-center md:hidden">
+						<ModeToggle />
 						<SearchInput isTransparent={!isScrolled && isHomePage} />
 						<Button
 							variant="ghost"
@@ -115,9 +128,9 @@ export function Header() {
 					<nav className="container mx-auto px-4 py-4">
 						<ul className="space-y-4">
 							{[
-								{ name: "Collection", href: "/collection" },
-								{ name: "Departments", href: "/departments" },
-								{ name: "About", href: "/about" },
+								{ name: "Browse collection", href: "/search" },
+								// { name: "Departments", href: "/departments" },
+								// { name: "About", href: "/about" },
 							].map((item) => (
 								<li key={item.name}>
 									<Link

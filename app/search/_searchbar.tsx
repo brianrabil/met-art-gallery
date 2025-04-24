@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useForm } from "@tanstack/react-form";
 import { useDebouncer } from "@tanstack/react-pacer";
-import { Store, useStore } from "@tanstack/react-store";
 import { Loader2Icon, SearchIcon, XIcon } from "lucide-react";
 import { createSerializer, useQueryStates } from "nuqs";
 import { searchParamsParsers } from "./_search-params";
@@ -66,7 +65,7 @@ export function Searchbar() {
 									name={field.name}
 									value={field.state.value}
 									placeholder="Search artworks, artists, or exhibitions..."
-									className="pl-10 pr-4 py-3 h-auto rounded-l-lg rounded-r-none text-xl border-r-0"
+									className="pl-10 pr-4 py-3 bg-background h-auto rounded-l-lg rounded-r-none text-xl border-r-0"
 									onBlur={field.handleBlur}
 									onChange={(e) => field.handleChange(e.target.value)}
 									onKeyDown={(e) => {
