@@ -1,4 +1,4 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Met Art Gallery
 
 ## Getting Started
 
@@ -16,21 +16,15 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Features
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Fast Performance: Achieves instant load times through efficient data fetching and caching strategies, leveraging Vercel’s Edge Network and Tanstack Query’s client-side caching.
+- Cutting-Edge Tech Stack: Built with Next.js 15, utilizing the latest features for performance and developer experience.
+- Parallel Streaming: Implements React Suspense and React Server Components (RSC) for seamless, incremental rendering of UI components.
+- End-to-End Type Safety: Ensures robust type safety across the application using TypeScript and ORPC for type-safe API interactions.
+- Fully-Typed ORPC RPC Server: Addresses CORS issues in client requests by using a type-safe ORPC server, configured with a relative /rpc path to ensure same-origin requests.
+- SearchParams for Analytics and State: Utilizes searchParams for link sharing, analytics tracking, and isomorphic state management, enabling persistent filter states in URLs.
+- Infinite Scrolling: Implements infinite scrolling using Tanstack Query’s useSuspenseInfiniteQuery hook, providing a smooth user experience for browsing large datasets.
+- Virtualized List (WIP): A work-in-progress feature to optimize rendering performance for large lists using Tanstack Virtual, planned for future enhancements.
+- Responsive UX: Delivers an excellent user experience across all screen sizes with a responsive 3-column grid layout and intuitive filter sidebar.
+- Deployed to Vercel: Hosted on Vercel for reliable, scalable deployment with automatic scaling and domain management.
