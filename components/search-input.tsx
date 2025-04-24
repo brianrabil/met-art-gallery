@@ -4,7 +4,6 @@ import { cn } from "@/lib/utils";
 import { useForm } from "@tanstack/react-form";
 import { useDebouncer } from "@tanstack/react-pacer";
 import { useRouter } from "next/navigation";
-import { useId, useState } from "react";
 
 export function SearchInput({ isTransparent }: { isTransparent?: boolean }) {
 	const router = useRouter();

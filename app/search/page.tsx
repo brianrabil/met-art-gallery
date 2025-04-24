@@ -1,4 +1,3 @@
-import { ArtObjectCard } from "@/components/art-object-card";
 import { Container } from "@/components/container";
 import {
 	Breadcrumb,
@@ -7,9 +6,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import * as api from "@/lib/api-legacy";
-import { loadSearchParams, serializeSearchParams } from "@/lib/search-params";
-import { searchResponseSchema } from "@/lib/validators";
+import { loadSearchParams } from "@/lib/search-params";
 import {
 	HydrationBoundary,
 	QueryClient,
@@ -17,9 +14,7 @@ import {
 } from "@tanstack/react-query";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
-import { notFound } from "next/navigation";
 import type { SearchParams } from "nuqs";
-import { createLoader } from "nuqs/server";
 import { Suspense } from "react";
 import { PAGE_SIZE } from "./_config";
 import { FilterSidebar } from "./filter-sidebar";

@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { getObject } from "@/lib/api-legacy";
+import { getObjectById } from "@/lib/api/router";
 import { ArrowLeft, Calendar, Globe, Tag, User } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -43,14 +43,16 @@ export default async function ObjectPage({
 			</div>
 
 			<Suspense fallback={<ObjectDetailSkeleton />}>
-				<ObjectDetail objectId={objectId} />
+				<ObjectDetail objectID={objectId} />
 			</Suspense>
 		</Container>
 	);
 }
 
-async function ObjectDetail({ objectId }: { objectId: number }) {
-	const object = await getObject(objectId);
+async function ObjectDetail({ objectID }: { objectID: number }) {
+	const object = await getObjectById({
+		objectID,
+	});
 
 	if (!object) {
 		notFound();

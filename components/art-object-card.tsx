@@ -2,7 +2,6 @@
 
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import type { ObjectResponse } from "@/lib/api-legacy";
 import type * as api from "@/lib/api/router";
 import type { InferRouterOutputs } from "@orpc/server";
 import { ArrowRight } from "lucide-react";
