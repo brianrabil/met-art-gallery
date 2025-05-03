@@ -1,4 +1,4 @@
-import { ArtObjectCard } from "@/components/art-object-card";
+import { ArtworkCard } from "@/components/artwork-card";
 import { Container } from "@/components/container";
 import HeroSection from "@/components/hero-section";
 import { Button } from "@/components/ui/button";
@@ -37,8 +37,16 @@ export default async function Home() {
 		isHighlight: true,
 		hasImages: true,
 		isOnView: true,
-		limit: ARTWORK_COUNT,
+		pagination: {
+			limit: ARTWORK_COUNT,
+		},
 	});
+
+	const artworks = await Promise.all(
+		objectIDs.map(async (objectID) => {
+			if (objectID) return getObjectById(objectID);
+		}),
+	);
 
 	return (
 		<div>
@@ -56,13 +64,12 @@ export default async function Home() {
 					</div>
 					<div defaultValue="browse" className="w-full">
 						<div className="w-full h-full grid grid-cols-1 md:grid-cols-3 max-w-7xl mx-auto gap-4 relative">
-							{objectIDs.map(async (objectID) => {
-								const artwork = await getObjectById({ objectID });
-								// TODO: Handle error
-								return (
-									<ArtObjectCard key={artwork.objectID} object={artwork} />
-								);
-							})}
+							{artworks.map(
+								async (artwork) =>
+									!!artwork && (
+										<ArtworkCard key={artwork?.objectID} object={artwork} />
+									),
+							)}
 						</div>
 					</div>
 					<div className="flex justify-center py-12">

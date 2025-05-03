@@ -50,9 +50,7 @@ export default async function ObjectPage({
 }
 
 async function ObjectDetail({ objectID }: { objectID: number }) {
-	const object = await getObjectById({
-		objectID,
-	});
+	const object = await getObjectById(objectID);
 
 	if (!object) {
 		notFound();

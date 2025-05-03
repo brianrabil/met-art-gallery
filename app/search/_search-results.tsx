@@ -1,23 +1,18 @@
 "use client";
 
-import {
-	ArtObjectCard,
-	ArtObjectCardSkeleton,
-} from "@/components/art-object-card";
+import { ArtObjectCardSkeleton, ArtworkCard } from "@/components/artwork-card";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
-import { orpc } from "@/lib/api/client";
-import { context } from "@/lib/api/context";
+import {@/components/artwork-cardnt";
 import { getObjectById } from "@/lib/api/router";
 import {
 	useSuspenseInfiniteQuery,
 	useSuspenseQuery,
 } from "@tanstack/react-query";
-import { useStore } from "@tanstack/react-store";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { BoxIcon } from "lucide-react";
 import { useQueryStates } from "nuqs";
+import type React from "react";
 import { Suspense, useEffect, useRef } from "react";
 import { PAGE_SIZE } from "./_config";
 import { searchParamsParsers } from "./_search-params";
@@ -39,30 +34,37 @@ export function SearchResults() {
 	} = useSuspenseInfiniteQuery(
 		orpc.search.infiniteOptions({
 			input: (pageParam) => ({
+				pagination: {
+					limit: PAGE_SIZE,
+					offset: pageParam * PAGE_SIZE,
+				},
+				sort: {
+					direction: searchParams.direction ?? undefined,
+					field: searchParams.field ?? undefined,
+				},
 				artistOrCulture: searchParams.artistOrCulture ?? undefined,
 				dateBegin: searchParams.dateBegin ?? undefined,
 				dateEnd: searchParams.dateEnd ?? undefined,
-				direction: searchParams.direction ?? undefined,
-				field: searchParams.field ?? undefined,
 				geoLocation: searchParams.geoLocation ?? undefined,
 				departmentId: searchParams.departmentId ?? undefined,
 				hasImages: searchParams.hasImages ?? undefined,
 				isHighlight: searchParams.isHighlight ?? undefined,
 				isOnView: searchParams.isOnView ?? undefined,
-				limit: PAGE_SIZE,
 				medium: searchParams.medium ?? undefined,
-				offset: pageParam * PAGE_SIZE,
 				q: searchParams.q ?? undefined,
 				tags: searchParams.tags ?? undefined,
 				title: searchParams.title ?? undefined,
 			}),
-			context,
 			initialPageParam: offset ?? 0,
 			getNextPageParam: (lastPage) => lastPage.nextPage,
 		}),
 	);
 
-	const allRows = data ? data.pages.flatMap(({ objectIDs }) => objectIDs) : [];
+	const allRows: number[] = data
+		? (data.pages
+				.flatMap(({ objectIDs }) => objectIDs)
+				.filter((objectId) => !!objectId) as number[])
+		: [];
 
 	// The scrollable element for your list
 	const parentRef = useRef<HTMLDivElement>(null);
@@ -71,9 +73,9 @@ export function SearchResults() {
 	const rowVirtualizer = useVirtualizer({
 		count: hasNextPage ? allRows.length + 1 : allRows.length,
 		getScrollElement: () => parentRef.current,
-		estimateSize: () => 520,
+		estimateSize: () => 320,
 		overscan: 2,
-		lanes: 3,
+		lanes: 5,
 	});
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
@@ -102,10 +104,9 @@ export function SearchResults() {
 	if (data?.pages.length === 0) {
 		return <EmptyState />;
 	}
-
 	return (
 		<div>
-			{/* {isPending ? (
+			{isPending ? (
 				<p>Loading...</p>
 			) : status === "error" ? (
 				<span>Error: {error?.message}</span>
@@ -114,7 +115,7 @@ export function SearchResults() {
 					ref={parentRef}
 					className="w-full overflow-y-scroll"
 					style={{
-						height: "90vh",
+						height: "100vh",
 						overflow: "auto",
 					}}
 				>
@@ -126,7 +127,6 @@ export function SearchResults() {
 						}}
 					>
 						{rowVirtualizer.getVirtualItems().map((virtualRow) => {
-							console.log(allRows);
 							const index = virtualRow.index;
 							const isLoaderRow = virtualRow.index > allRows.length - 1;
 							if (isLoaderRow) {
@@ -141,53 +141,48 @@ export function SearchResults() {
 											height: `${virtualRow.size}px`,
 											transform: `translateY(${virtualRow.start}px)`,
 										}}
-										className="flex justify-center"
+										className="flex justify-center items-center"
 									>
 										{hasNextPage ? "Loading more..." : "No more items to load"}
 									</div>
 								);
 							}
 
+							// Set gutter (spacing) between cards
+							const GUTTER = 24; // px
+							const LANES = rowVirtualizer.options.lanes ?? 3;
+							const laneWidth = `calc(${100 / LANES}% - ${(GUTTER * (LANES - 1)) / LANES}px)`;
+							const left = `calc(${virtualRow.lane * (100 / LANES)}% + ${virtualRow.lane * GUTTER}px)`;
+
 							return (
 								<div
 									key={virtualRow.key}
-									className="p-4"
+									className="transition-shadow"
 									style={{
 										position: "absolute",
 										top: 0,
-										left: `${virtualRow.lane * 33}%`,
-										width: "33%",
-										height: `${allRows[virtualRow.index]}px`,
+										left,
+										width: laneWidth,
+										height: `${virtualRow.size - GUTTER}px`,
 										transform: `translateY(${virtualRow.start}px)`,
+										padding: `0 0 ${GUTTER}px 0`,
+										boxSizing: "border-box",
 									}}
 								>
-									{isLoaderRow ? (
-										hasNextPage ? (
-											"Loading more..."
-										) : (
-											"Nothing more to load"
-										)
-									) : (
-										<Suspense
+									<Suspense
+										key={`${index}-${allRows[virtualRow.index]}`}
+										fallback={<ArtObjectCardSkeleton />}
+									>
+										<SuspensedArtObjectCard
 											key={`${index}-${allRows[virtualRow.index]}`}
-											fallback={<ArtObjectCardSkeleton />}
-										>
-											<SuspensedArtObjectCard
-												key={`${index}-${allRows[virtualRow.index]}`}
-												style={
-													{
-														// position: "absolute",
-														// top: 0,
-														// left: `${virtualRow.lane * 25}%`,
-														// width: "25vw",
-														// height: `${allRows[virtualRow.index]}px`,
-														// transform: `translateY(${virtualRow.start}px)`,
-													}
-												}
-												objectID={allRows[virtualRow.index]}
-											/>
-										</Suspense>
-									)}
+											style={{
+												height: "100%",
+												display: "flex",
+												flexDirection: "column",
+											}}
+											objectID={allRows[virtualRow.index]}
+										/>
+									</Suspense>
 								</div>
 							);
 						})}
@@ -196,15 +191,12 @@ export function SearchResults() {
 			)}
 			<div>
 				{isFetching && !isFetchingNextPage ? "Background Updating..." : null}
-			</div> */}
-			<div className="h-full w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+			</div>
+			{/* <div className="h-full w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
 				{data?.pages.map(({ objectIDs, page }) => (
-					<>
+					<React.Fragment key={page}>
 						{page > 0 ? (
-							<div
-								key={page}
-								className="flex items-center gap-4 col-span-1 md:col-span-2 lg:col-span-3"
-							>
+							<div className="flex items-center gap-4 col-span-1 md:col-span-2 lg:col-span-3">
 								<div className="flex items-center w-full my-8">
 									<Separator className="flex-1" />
 									<span className="mx-4 text-xs text-muted-foreground uppercase tracking-widest">
@@ -216,13 +208,13 @@ export function SearchResults() {
 						) : null}
 						{objectIDs.map((objectID) => (
 							<Suspense key={objectID} fallback={<ArtObjectCardSkeleton />}>
-								<SuspensedArtObjectCard key={objectID} objectID={objectID} />
+								<SuspensedArtObjectCard objectID={objectID} />
 							</Suspense>
 						))}
-					</>
+					</React.Fragment>
 				))}
 				<Button onClick={() => fetchNextPage()}>Load More</Button>
-			</div>
+			</div> */}
 		</div>
 	);
 }
@@ -248,12 +240,9 @@ function SuspensedArtObjectCard({
 	const { data: object } = useSuspenseQuery({
 		queryKey: ["object", objectID],
 		staleTime: Number.POSITIVE_INFINITY,
-		queryFn: () =>
-			getObjectById({
-				objectID,
-			}),
+		queryFn: () => getObjectById(objectID),
 	});
-	return <ArtObjectCard style={style} object={object} />;
+	return <ArtworkCard style={style} object={object} />;
 }
 
 export function SearchResultsSkeleton() {
@@ -286,15 +275,7 @@ function MasonryVerticalVirtualizerVariable({ rows }: { rows: Array<number> }) {
 
 	return (
 		<>
-			<div
-				ref={parentRef}
-				className="List"
-				style={{
-					height: "200px",
-					width: "400px",
-					overflow: "auto",
-				}}
-			>
+			<div ref={parentRef} className="List flex flex-col min-h-[200px]">
 				<div
 					style={{
 						height: `${rowVirtualizer.getTotalSize()}px`,

@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 import { useForm } from "@tanstack/react-form";
 import { useDebouncer } from "@tanstack/react-pacer";
 import { Loader2Icon, SearchIcon, XIcon } from "lucide-react";
@@ -10,7 +11,11 @@ import { searchParamsParsers } from "./_search-params";
 
 const serialize = createSerializer(searchParamsParsers);
 
-export function Searchbar() {
+export function Searchbar({
+	className,
+}: {
+	readonly className?: string;
+}) {
 	const [searchParams, setSearchParams] = useQueryStates(searchParamsParsers);
 
 	const setSearchDebouncer = useDebouncer(
@@ -36,79 +41,66 @@ export function Searchbar() {
 	});
 
 	return (
-		<div>
-			<div className="max-w-3xl mb-4">
-				<h2 className="text-3xl md:text-4xl font-serif mb-4">
-					Explore the Collection
-				</h2>
-				<p className="text-muted-foreground">
-					Discover thousands of artworks spanning over 5,000 years of world
-					culture
-				</p>
-			</div>
-
-			<div className="max-w-2xl relative">
-				<form
-					onSubmit={(e) => {
-						e.preventDefault();
-						e.stopPropagation();
-						form.handleSubmit();
-					}}
-					className="flex"
-				>
-					<form.Field name="query">
-						{(field) => (
-							<div className="relative flex-grow">
-								<SearchIcon className="absolute left-4 top-1/2 transform -translate-y-1/2 text-muted-foreground/75 size-4" />
-								<Input
-									id={field.name}
-									name={field.name}
-									value={field.state.value}
-									placeholder="Search artworks, artists, or exhibitions..."
-									className="pl-10 pr-4 bg-background rounded-l-lg rounded-r-none h-full border-r-0"
-									onBlur={field.handleBlur}
-									onChange={(e) => field.handleChange(e.target.value)}
-									onKeyDown={(e) => {
-										if (e.key === "Enter") {
-											e.preventDefault();
-											e.stopPropagation();
-											form.handleSubmit();
-										}
-									}}
-								/>
-								{field.state.value?.length > 0 && (
-									<Button
-										type="button"
-										size="icon"
-										variant="ghost"
-										className="absolute size-5 right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground"
-										onClick={() => form.reset()}
-									>
-										<XIcon className="size-5" />
-									</Button>
-								)}
-							</div>
-						)}
-					</form.Field>
-					<form.Subscribe
-						selector={(state) => [state.canSubmit, state.isSubmitting]}
-					>
-						{([canSubmit, isSubmitting]) => (
+		<form
+			onSubmit={(e) => {
+				e.preventDefault();
+				e.stopPropagation();
+				form.handleSubmit();
+			}}
+			className={cn("flex w-full max-w-2xl relative", className)}
+		>
+			<form.Field name="query">
+				{(field) => (
+					<div className="relative flex-grow">
+						<SearchIcon className="absolute left-4 top-1/2 transform -translate-y-1/2 text-muted-foreground/75 size-5" />
+						<Input
+							id={field.name}
+							name={field.name}
+							value={field.state.value}
+							placeholder="Search artworks, artists, or exhibitions..."
+							className="pl-11 pr-4 placeholder:text-base text-base lg:text-base sm:text-base md:text-base bg-background h-12 rounded-full"
+							onBlur={field.handleBlur}
+							onChange={(e) => field.handleChange(e.target.value)}
+							onKeyDown={(e) => {
+								if (e.key === "Enter") {
+									e.preventDefault();
+									e.stopPropagation();
+									form.handleSubmit();
+								}
+							}}
+						/>
+						{field.state.value?.length > 0 && (
 							<Button
-								type="submit"
-								disabled={!canSubmit}
-								className="rounded-l-none rounded-r-lg px-6 h-auto"
+								type="button"
+								size="sm"
+								variant="ghost"
+								className="absolute right-16 z-20 top-1/2 -translate-1/2 bottom-1 text-muted-foreground"
+								onClick={() => form.reset()}
 							>
-								{isSubmitting ? (
-									<Loader2Icon className="h-5 w-5 animate-spin" />
-								) : (
-									"Search"
-								)}
+								<XIcon className="size-4" />
+								Clear
 							</Button>
 						)}
-					</form.Subscribe>
-				</form>
-			</div>
-		</div>
+						<form.Subscribe
+							selector={(state) => [state.canSubmit, state.isSubmitting]}
+						>
+							{([canSubmit, isSubmitting]) => (
+								<Button
+									type="submit"
+									disabled={!canSubmit}
+									className="absolute rounded-full right-1 top-1 bottom-1 px-5 h-auto"
+								>
+									{isSubmitting ? (
+										<Loader2Icon className="h-5 w-5 animate-spin" />
+									) : (
+										"Search"
+									)}
+								</Button>
+							)}
+						</form.Subscribe>
+					</div>
+				)}
+			</form.Field>
+		</form>
 	);
 }

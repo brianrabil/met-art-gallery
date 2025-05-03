@@ -1,5 +1,6 @@
 "use client";
 
+import { Searchbar } from "@/app/search/_searchbar";
 import { Container } from "@/components/container";
 import { ModeToggle } from "@/components/mode-toggle";
 import { SearchInput } from "@/components/search-input";
@@ -9,6 +10,7 @@ import {
 	SheetHeader,
 	SheetTrigger,
 } from "@/components/ui/sheet";
+import { meta } from "@/lib/meta";
 import { cn } from "@/lib/utils";
 import { Store, useStore } from "@tanstack/react-store";
 import { MenuIcon } from "lucide-react";
@@ -20,8 +22,6 @@ import { Separator } from "./ui/separator";
 const store = new Store<{ isScrolled: boolean }>({
 	isScrolled: false,
 });
-
-const navItems = [{ name: "Explore collection", href: "/search" }];
 
 export function Header() {
 	const isScrolled = useStore(store, (state) => state.isScrolled);
@@ -53,7 +53,7 @@ export function Header() {
 			className={cn(
 				"fixed top-0 left-0 right-0 z-50 transition-all duration-300",
 				isScrolled || (!isHomePage && !isSearchPage)
-					? "bg-background/95 backdrop-blur-sm border-b"
+					? "bg-background border-b"
 					: "bg-transparent border-transparent",
 			)}
 		>
@@ -63,19 +63,22 @@ export function Header() {
 					<Link href="/" className="flex items-center space-x-2">
 						<span
 							className={cn(
-								"font-serif text-2xl font-bold tracking-tight transition-colors",
+								"font-serif text-2xl font-bold whitespace-nowrap tracking-tight transition-colors",
 								isScrolled || !isHomePage ? "text-foreground" : "text-white",
 							)}
 						>
 							Meet the Met
 						</span>
 					</Link>
+					<div className="w-full">
+						<Searchbar />
+					</div>
 
 					{/* Desktop Navigation */}
 					<div className="hidden md:flex items-center space-x-6">
 						<nav>
 							<ul className="flex space-x-6">
-								{navItems.map((item) => (
+								{meta.navItems.map((item) => (
 									<li key={item.name}>
 										<Link
 											href={item.href}
@@ -97,17 +100,16 @@ export function Header() {
 
 						{/* Desktop Search */}
 						<div className="gap-x-2 hidden md:flex">
-							<SearchInput isTransparent={!isScrolled && isHomePage} />
-							<div className="opacity-75">
-								<ModeToggle
-									className={cn(
-										isScrolled || !isHomePage
-											? "text-foreground"
-											: "text-white",
-										"hover:text-primary",
-									)}
-								/>
-							</div>
+							{/* <ModeToggle
+								variant="outline"
+								className={cn(
+									isScrolled || !isHomePage
+										? "text-foreground"
+										: "text-white  bg-transparent hover:bg-background/25",
+									"hover:text-primary-foreground",
+								)}
+							/> */}
+							{/* <SearchInput isTransparent={!isScrolled && isHomePage} /> */}
 						</div>
 					</div>
 
@@ -153,9 +155,9 @@ function MobileMenu() {
 				<Container>
 					<div className="flex flex-col">
 						<div className="flex items-center gap-x-2 flex-nowrap">
-							<SearchInput isTransparent={!isScrolled && isHomePage} />
 							<div className="opacity-75">
 								<ModeToggle
+									variant="outline"
 									className={cn(
 										isScrolled || !isHomePage
 											? "text-foreground"
@@ -164,6 +166,7 @@ function MobileMenu() {
 									)}
 								/>
 							</div>
+							<SearchInput isTransparent={!isScrolled && isHomePage} />
 						</div>
 						<Separator className="mb-4 mt-8" />
 						<nav className="container mx-auto px-4 py-4">
@@ -180,7 +183,7 @@ function MobileMenu() {
 										Home
 									</Link>
 								</li>
-								{navItems.map((item) => (
+								{meta.navItems.map((item) => (
 									<li key={item.name}>
 										<Link
 											href={item.href}

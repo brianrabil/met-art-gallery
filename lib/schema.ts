@@ -151,34 +151,7 @@ export const searchOutputSchema = z.object({
 	nextPage: z.boolean(),
 });
 
-/* Response from the /search endpoint */
-export const searchResponseSchema = z.object({
-	/** The total number of publicly-available objects */
-	total: z.number().int(),
-	/** An array containing the object ID of publicly-available object */
-	objectIDs: z.array(z.number().int()).nullable().optional(),
-});
-
 export const objectsInputSchema = z
 	.object({})
 	.and(paginationSchema)
 	.and(sortSchema);
-
-export const objectsOutputSchema = z.object({
-	total: z.number().int(),
-	items: z.array(objectSchema),
-});
-
-// Schema for the Departments endpoint (/public/collection/v1/departments)
-export const departmentsSchema = z
-	.object({
-		departments: z.array(
-			z
-				.object({
-					departmentId: z.number().int(),
-					displayName: z.string(),
-				})
-				.nullable(),
-		),
-	})
-	.nullable();

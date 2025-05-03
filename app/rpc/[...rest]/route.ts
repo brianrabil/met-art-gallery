@@ -1,4 +1,3 @@
-import { context } from "@/lib/api/context";
 import { router } from "@/lib/api/router";
 import { onError } from "@orpc/server";
 import { RPCHandler } from "@orpc/server/fetch";
@@ -21,7 +20,6 @@ const handler = new RPCHandler(router, {
 async function handleRequest(request: Request) {
 	const { response } = await handler.handle(request, {
 		prefix: "/rpc",
-		context,
 	});
 
 	return response ?? new Response("Not found", { status: 404 });
