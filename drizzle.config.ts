@@ -18,7 +18,7 @@ if (!process.env.TURSO_AUTH_TOKEN) {
 }
 
 export default {
-	schema: "./lib/db/schema.ts",
+	schema: ["./lib/db/auth-schema.ts", "./lib/db/schema.ts"],
 	out: "./drizzle",
 	dialect: "turso",
 	dbCredentials: {

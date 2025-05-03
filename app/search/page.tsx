@@ -75,7 +75,7 @@ export default async function SearchPage({
 						</div>
 					</Container>
 					<div className="flex justify-center text-center items-end gap-2">
-						<FilterPanel />
+						{/* <FilterPanel /> */}
 						{/* <Searchbar /> */}
 						<div className="lg:hidden">
 							<MobileFilters />
@@ -157,20 +157,7 @@ const sortOptions = [
 
 export function FilterPanel() {
 	return (
-		<div className="bg-background w-full">
-			<Container className="py-6 text-center">
-				<div className="max-w-3xl flex flex-col justify-center align-center gap-4 mx-auto">
-					<h2 className="text-3xl md:text-4xl font-serif">
-						Browse the Collection
-					</h2>
-					<p className="text-muted-foreground">
-						Discover thousands of artworks spanning over 5,000 years of world
-						culture
-					</p>
-					<Searchbar className="mx-auto" />
-				</div>
-			</Container>
-
+		<div className="bg-background w-full max-h-screen overflow-y-hidden">
 			{/* Filters */}
 			<section
 				aria-labelledby="filter-heading"

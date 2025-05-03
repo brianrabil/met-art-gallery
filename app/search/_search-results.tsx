@@ -1,22 +1,65 @@
 "use client";
 
 import { ArtObjectCardSkeleton, ArtworkCard } from "@/components/artwork-card";
+import { Container } from "@/components/container";
 import { Button } from "@/components/ui/button";
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Skeleton } from "@/components/ui/skeleton";
-import {@/components/artwork-cardnt";
+import { orpc } from "@/lib/api/client";
 import { getObjectById } from "@/lib/api/router";
+import { cn } from "@/lib/utils";
 import {
 	useSuspenseInfiniteQuery,
 	useSuspenseQuery,
 } from "@tanstack/react-query";
 import { useVirtualizer } from "@tanstack/react-virtual";
-import { BoxIcon } from "lucide-react";
+import { BoxIcon, ChevronDownIcon } from "lucide-react";
 import { useQueryStates } from "nuqs";
 import type React from "react";
 import { Suspense, useEffect, useRef } from "react";
 import { PAGE_SIZE } from "./_config";
 import { searchParamsParsers } from "./_search-params";
-
+const filters = {
+	price: [
+		{ value: "0", label: "$0 - $25", checked: false },
+		{ value: "25", label: "$25 - $50", checked: false },
+		{ value: "50", label: "$50 - $75", checked: false },
+		{ value: "75", label: "$75+", checked: false },
+	],
+	color: [
+		{ value: "white", label: "White", checked: false },
+		{ value: "beige", label: "Beige", checked: false },
+		{ value: "blue", label: "Blue", checked: true },
+		{ value: "brown", label: "Brown", checked: false },
+		{ value: "green", label: "Green", checked: false },
+		{ value: "purple", label: "Purple", checked: false },
+	],
+	size: [
+		{ value: "xs", label: "XS", checked: false },
+		{ value: "s", label: "S", checked: true },
+		{ value: "m", label: "M", checked: false },
+		{ value: "l", label: "L", checked: false },
+		{ value: "xl", label: "XL", checked: false },
+		{ value: "2xl", label: "2XL", checked: false },
+	],
+	category: [
+		{ value: "all-new-arrivals", label: "All New Arrivals", checked: false },
+		{ value: "tees", label: "Tees", checked: false },
+		{ value: "objects", label: "Objects", checked: false },
+		{ value: "sweatshirts", label: "Sweatshirts", checked: false },
+		{ value: "pants-and-shorts", label: "Pants & Shorts", checked: false },
+	],
+};
+const sortOptions = [
+	{ name: "Most Popular", href: "#", current: true },
+	{ name: "Best Rating", href: "#", current: false },
+	{ name: "Newest", href: "#", current: false },
+];
 export function SearchResults() {
 	const [{ limit, offset, ...searchParams }] =
 		useQueryStates(searchParamsParsers);
@@ -105,20 +148,86 @@ export function SearchResults() {
 		return <EmptyState />;
 	}
 	return (
-		<div>
+		<div
+			ref={parentRef}
+			className="max-w-screen w-full overflow-y-auto h-screen max-h-screen min-h-screen"
+		>
+			<div className="bg-background w-full">
+				<Container className="py-6 text-center">
+					<div className="max-w-3xl flex flex-col justify-center align-center gap-4 mx-auto">
+						<h2 className="text-3xl md:text-4xl font-serif">
+							Browse the Collection
+						</h2>
+						<p className="text-muted-foreground">
+							Discover thousands of artworks spanning over 5,000 years of world
+							culture
+						</p>
+						{/* <Searchbar className="mx-auto" /> */}
+					</div>
+				</Container>
+
+				{/* Filters */}
+				<section
+					aria-labelledby="filter-heading"
+					className="grid items-center border-b border-border"
+				>
+					<h2 id="filter-heading" className="sr-only">
+						Filters
+					</h2>
+					<div className="relative w-full col-start-1 row-start-1 py-4">
+						<Container className="flex divide-x divide-border text-sm">
+							<div className="pl-6">
+								<Button variant="ghost" className="text-muted-foreground">
+									Clear all
+								</Button>
+							</div>
+						</Container>
+					</div>
+
+					<div className="col-start-1 row-start-1 py-4">
+						<div className="mx-auto flex max-w-7xl justify-end px-4 sm:px-6 lg:px-8">
+							<DropdownMenu>
+								<DropdownMenuTrigger asChild>
+									<Button
+										variant="outline"
+										className="group inline-flex justify-center text-sm font-medium text-foreground hover:text-foreground"
+									>
+										Sort
+										<ChevronDownIcon
+											aria-hidden="true"
+											className="-mr-1 ml-1 size-5 shrink-0 text-muted-foreground group-hover:text-foreground"
+										/>
+									</Button>
+								</DropdownMenuTrigger>
+								<DropdownMenuContent align="end" className="w-40">
+									{sortOptions.map((option) => (
+										<DropdownMenuItem key={option.name} asChild>
+											<a
+												href={option.href}
+												className={cn(
+													option.current
+														? "font-medium text-foreground"
+														: "text-muted-foreground",
+													"block px-4 py-2 text-sm focus:bg-accent focus:outline-none",
+												)}
+											>
+												{option.name}
+											</a>
+										</DropdownMenuItem>
+									))}
+								</DropdownMenuContent>
+							</DropdownMenu>
+						</div>
+					</div>
+				</section>
+			</div>
+
 			{isPending ? (
 				<p>Loading...</p>
 			) : status === "error" ? (
 				<span>Error: {error?.message}</span>
 			) : (
-				<div
-					ref={parentRef}
-					className="w-full overflow-y-scroll"
-					style={{
-						height: "100vh",
-						overflow: "auto",
-					}}
-				>
+				<div>
 					<div
 						style={{
 							height: `${rowVirtualizer.getTotalSize()}px`,

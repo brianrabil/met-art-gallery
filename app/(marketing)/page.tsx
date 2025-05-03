@@ -43,9 +43,13 @@ export default async function Home() {
 	});
 
 	const artworks = await Promise.all(
-		objectIDs.map(async (objectID) => {
-			if (objectID) return getObjectById(objectID);
-		}),
+		objectIDs
+			.filter((objectID) => objectID !== null && objectID !== undefined)
+			.map(async (objectID) => {
+				const obj = await getObjectById(objectID);
+				if (obj?.objectID) return obj;
+				return null;
+			}),
 	);
 
 	return (
@@ -64,12 +68,9 @@ export default async function Home() {
 					</div>
 					<div defaultValue="browse" className="w-full">
 						<div className="w-full h-full grid grid-cols-1 md:grid-cols-3 max-w-7xl mx-auto gap-4 relative">
-							{artworks.map(
-								async (artwork) =>
-									!!artwork && (
-										<ArtworkCard key={artwork?.objectID} object={artwork} />
-									),
-							)}
+							{artworks.map(async (artwork) => (
+								<ArtworkCard key={artwork.objectID} object={artwork} />
+							))}
 						</div>
 					</div>
 					<div className="flex justify-center py-12">

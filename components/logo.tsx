@@ -8,7 +8,7 @@ export function Logo({
 	return (
 		<span
 			className={cn(
-				"block font-serif text-2xl text-foreground font-bold tracking-tight transition-colors",
+				"block whitespace-nowrap font-serif text-2xl text-foreground font-bold tracking-tight transition-colors",
 				// isScrolled || !isHomePage ? "text-foreground" : "text-white",
 				className,
 			)}
