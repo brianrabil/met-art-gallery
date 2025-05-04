@@ -24,6 +24,8 @@ export type Post = {
 	coverImage: string;
 	author: Author;
 	excerpt: string;
+	categories: string[];
+	photoCredit: string;
 	ogImage: {
 		url: string;
 	};

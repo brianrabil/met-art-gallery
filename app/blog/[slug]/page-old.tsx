@@ -1,5 +1,4 @@
 import { getAllPosts, getPostBySlug } from "@/app/blog/api";
-import { Author, PostBody } from "@/components/blog-post";
 import { Container } from "@/components/container";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -12,15 +11,6 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import React from "react";
 
-function DateFormatter({ dateString }: { dateString: string }) {
-	const date = parseISO(dateString);
-	return (
-		<time dateTime={dateString}>
-			{format(date, "MMM d, yyyy h:mm a 'EDT'")}
-		</time>
-	);
-}
-
 export default async function BlogPost(props: Params) {
 	const params = await props.params;
 	const post = getPostBySlug(params.slug);
@@ -28,30 +18,31 @@ export default async function BlogPost(props: Params) {
 	if (!post) {
 		return notFound();
 	}
+
+	const content = await markdownToHtml(post.content || "");
+
 	// For demo purposes - we're adding categories and tags
 	// These would normally come from your post metadata
 	const categories = ["Art", "Technology"];
 	const tags = ["Met Gallery", "Art History", "Digital Experience"];
 
-	const content = await markdownToHtml(post.content || "");
 	return (
 		<article className="py-16">
 			<Container variant="constrained" width="narrow">
 				<header className="mb-8">
 					<nav className="mb-4">
-						{post.categories.map((category, index) => (
-							<>
+						{categories.map((category, index) => (
+							<React.Fragment key={category}>
 								<Link
-									key={category}
 									href={`/category/${category.toLowerCase()}`}
 									className="text-sm font-semibold text-primary hover:underline"
 								>
 									{category}
 								</Link>
-								{index < post.categories.length - 1 && (
+								{index < categories.length - 1 && (
 									<span className="mx-2">/</span>
 								)}
-							</>
+							</React.Fragment>
 						))}
 					</nav>
 					<h1 className="mb-4 text-4xl font-bold">{post.title}</h1>
@@ -71,7 +62,8 @@ export default async function BlogPost(props: Params) {
 						<div>
 							<p className="font-semibold">By {post.author.name}</p>
 							<p className="text-sm text-muted-foreground">
-								Posted on <DateFormatter dateString={post.date} />
+								Posted on{" "}
+								{format(parseISO(post.date), "MMM d, yyyy h:mm a 'EDT'")}
 							</p>
 						</div>
 					</div>
@@ -82,29 +74,27 @@ export default async function BlogPost(props: Params) {
 						height={600}
 						className="rounded-lg"
 					/>
-					{post.photoCredit && (
-						<p className="mt-2 text-sm text-muted-foreground">
-							Photo: {post.photoCredit}
-						</p>
-					)}
+					<p className="mt-2 text-sm text-muted-foreground">
+						Photo: Metropolitan Museum of Art
+					</p>
 				</header>
 
 				<div className="prose-primary prose max-w-none dark:prose-invert">
 					{/* Render the HTML content safely */}
 					{/* biome-ignore lint/security/noDangerouslySetInnerHtml: <explanation> */}
-					<div dangerouslySetInnerHTML={{ __html: post.content }} />
+					<div dangerouslySetInnerHTML={{ __html: content }} />
 				</div>
 
 				<footer className="mt-8">
 					<h3 className="mb-2 text-lg font-semibold">Tags</h3>
 					<div className="flex flex-wrap gap-2">
-						{/* {post.tags.map((tag) => (
+						{tags.map((tag) => (
 							<Badge key={tag} variant="secondary">
-								<Link href={`/category/${tag.toLowerCase().replace(" ", "-")}`}>
+								<Link href={`/tag/${tag.toLowerCase().replace(/ /g, "-")}`}>
 									{tag}
 								</Link>
 							</Badge>
-						))} */}
+						))}
 					</div>
 				</footer>
 			</Container>

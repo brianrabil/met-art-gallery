@@ -6,6 +6,7 @@ import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { Suspense } from "react";
 import "./globals.css";
 import { Footer } from "@/components/footer";
+import { SpaceshipScrollbar } from "@/components/ui/spaceship-scrollbar";
 
 const inter = Inter({
 	subsets: ["latin"],
@@ -45,6 +46,7 @@ export default function RootLayout({
 			<body className={`${inter.variable} ${playfair.variable} antialiased`}>
 				<NuqsAdapter>
 					<Providers>
+						<SpaceshipScrollbar />
 						<div className="min-h-screen flex flex-col bg-background">
 							<Suspense>
 								<Header />

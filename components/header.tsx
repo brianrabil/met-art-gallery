@@ -1,6 +1,10 @@
 "use client";
 
 import { Searchbar } from "@/app/search/_searchbar";
+import {
+	ButtonBackgroundShine,
+	ButtonRotateBorder,
+} from "@/components/buttons";
 import { Container } from "@/components/container";
 import { Logo } from "@/components/logo";
 import { ModeToggle } from "@/components/mode-toggle";
@@ -19,7 +23,6 @@ import { MenuIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef } from "react";
-import { ThemeProvider } from "./theme-provider";
 import { Button } from "./ui/button";
 import { Separator } from "./ui/separator";
 
@@ -64,7 +67,7 @@ export function Header() {
 			const rect = ref.current.getBoundingClientRect();
 			headerStore.setState((state) => ({
 				...state,
-				height: rect.height,
+				computedHeight: rect.height,
 			}));
 		}
 	}, []);
@@ -73,81 +76,103 @@ export function Header() {
 		<header
 			ref={ref}
 			className={cn(
-				"fixed top-0 left-0 right-0 z-50 transition-all duration-300",
+				"w-full z-50 transition-all duration-200",
 				isScrolled || (!isHomePage && !isSearchPage)
-					? "bg-background border-b"
-					: "bg-transparent border-transparent",
+					? "bg-background"
+					: "bg-transparent",
 			)}
 		>
-			<Container className="py-3 md:py-4">
-				<div className="flex items-center justify-between">
-					{/* Logo */}
-					<Link href="/" className="flex items-center space-x-2">
-						<Logo
-							className={cn(
-								"transition-colors",
-								isScrolled || !isHomePage ? "text-foreground" : "text-white",
-							)}
-						/>
-					</Link>
-					<div className="w-full">
-						<Searchbar />
+			<Container variant="fluid" className="py-3 md:py-4">
+				<div className="flex items-center w-full h-full gap-6">
+					<div className="w-1/3 flex flex-row flex-nowrap">
+						{/* Logo */}
+						<div>
+							<Link href="/" className="flex items-center space-x-2">
+								<Logo
+									className={cn(
+										"transition-colors",
+										isScrolled || !isHomePage
+											? "text-foreground"
+											: "text-white",
+									)}
+								/>
+							</Link>
+						</div>
+
+						{/* Desktop Navigation */}
+						<div className="hidden md:flex items-center space-x-6">
+							<nav>
+								<ul className="flex space-x-6">
+									{meta.navItems.left.map((item) => (
+										<li key={item.name}>
+											<Link
+												href={item.href}
+												prefetch
+												data-active={pathname === item.href}
+												className={cn(
+													"text-sm font-medium transition-colors hover:text-primary",
+													isScrolled || !isHomePage
+														? "text-foreground"
+														: "text-white/90",
+												)}
+											>
+												{item.name}
+											</Link>
+										</li>
+									))}
+								</ul>
+							</nav>
+						</div>
 					</div>
 
-					{/* Desktop Navigation */}
-					<div className="hidden md:flex items-center space-x-6">
-						{/* <nav>
-							<ul className="flex space-x-6">
-								{meta.navItems.map((item) => (
-									<li key={item.name}>
-										<Link
-											href={item.href}
-											prefetch
-											className={cn(
-												"text-sm font-medium transition-colors hover:text-primary",
-												isScrolled || !isHomePage
-													? "text-foreground"
-													: "text-white hover:text-white/80",
-												pathname === item.href ? "font-semibold" : "",
-											)}
-										>
-											{item.name}
-										</Link>
-									</li>
-								))}
-							</ul>
-						</nav> */}
-
-						{/* Desktop Search */}
-						<div className="gap-x-2 hidden md:flex">
-							{/* <ModeToggle
-								variant="outline"
-								className={cn(
-									isScrolled || !isHomePage
-										? "text-foreground"
-										: "text-white  bg-transparent hover:bg-background/25",
-									"hover:text-primary-foreground",
-								)}
-							/> */}
-							{/* <SearchInput isTransparent={!isScrolled && isHomePage} /> */}
-							<SignedIn>
-								<UserButton />
-							</SignedIn>
-							<SignedOut>
-								<Link passHref href="/auth/sign-in">
-									<Button
-										className={cn(
-											isScrolled &&
-												isHomePage &&
-												"text-white bg-transparent hover:bg-background/25",
-											"hover:text-primary-foreground",
-										)}
-									>
-										Account
-									</Button>
-								</Link>
-							</SignedOut>
+					{/* Desktop Search */}
+					<div className="w-1/3 flex justify-center items-center">
+						<SearchInput
+							className="lg:min-w-[520px]"
+							isTransparent={!isScrolled && isHomePage}
+						/>
+					</div>
+					<div className="w-1/3 gap-x-2 hidden md:flex justify-end">
+						<div className="hidden md:flex items-center space-x-6">
+							<nav>
+								<ul className="flex space-x-6">
+									{meta.navItems.right.map((item) => (
+										<li key={item.name}>
+											<Link
+												href={item.href}
+												prefetch
+												data-active={pathname === item.href}
+												className={cn(
+													"text-sm font-medium transition-colors hover:text-primary",
+													isScrolled || !isHomePage
+														? "text-foreground"
+														: "text-white/90",
+												)}
+											>
+												{item.name}
+											</Link>
+										</li>
+									))}
+								</ul>
+							</nav>
 						</div>
+						<ModeToggle
+							variant="ghost"
+							className={cn(
+								isScrolled || !isHomePage
+									? "text-foreground"
+									: "text-white hover:bg-white/10",
+								"h-9 w-9",
+							)}
+						/>
+						<SignedIn>
+							<UserButton />
+						</SignedIn>
+						<SignedOut>
+							<Link passHref href="/auth/sign-in">
+								<ButtonBackgroundShine>Account</ButtonBackgroundShine>
+							</Link>
+						</SignedOut>
 					</div>
 
 					{/* Mobile Menu Button */}
@@ -169,10 +194,8 @@ function MobileMenu() {
 		<Sheet>
 			<SheetTrigger
 				className={cn(
-					"ml-2",
-					isScrolled || !isHomePage
-						? "text-foreground"
-						: "text-white hover:text-white/80 hover:bg-white/10",
+					"ml-2 rounded-md p-2 transition-colors hover:bg-border/20",
+					isScrolled || !isHomePage ? "text-foreground" : "text-white",
 				)}
 			>
 				<MenuIcon className="h-5 w-5" />
@@ -187,7 +210,7 @@ function MobileMenu() {
 					<div className="flex flex-col">
 						<nav className="container mx-auto px-4 py-4">
 							<ul className="space-y-4">
-								{meta.navItems.map((item) => (
+								{meta.navItems.left.map((item) => (
 									<li key={item.name}>
 										<Link
 											href={item.href}

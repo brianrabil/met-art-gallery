@@ -2,6 +2,7 @@
 title: "Top 10 Impressionist Paintings from The Met for Modern Homes"
 excerpt: "Discover ten timeless Impressionist masterpieces—each in the public domain—perfectly suited for contemporary interiors, complete with hi-res images ready for PaletteMatch AR previews, fine-art prints, or digital décor."
 coverImage: "https://images.metmuseum.org/CRDImages/ep/original/DT1854.jpg"
+categories: ["Art", "Impressionism"]
 date: "2025-05-02T00:00:00.000Z"
 author:
   name: Editorial Board

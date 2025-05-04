@@ -71,11 +71,6 @@ export function Footer() {
 			<Container className="pb-8 pt-16 sm:pt-24">
 				<div className="xl:grid xl:grid-cols-3 xl:gap-8">
 					<div className="space-y-8">
-						{/* <img
-							alt="Company name"
-							src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600"
-							className="h-9"
-						/> */}
 						<Logo />
 						<p className="text-balance text-sm text-muted-foreground">
 							Making the world a better place through constructing elegant
@@ -99,7 +94,7 @@ export function Footer() {
 							<div>
 								<h3 className="text-sm font-semibold text-foreground">Main</h3>
 								<ul className="mt-6 space-y-4">
-									{navigation.main.map((item) => (
+									{navigation.main.left.map((item) => (
 										<li key={item.name}>
 											<Link
 												href={item.href}

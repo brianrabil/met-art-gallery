@@ -22,13 +22,10 @@ export const meta = {
 	},
 
 	// Navigation (header & footer)
-	navItems: [
-		{ name: "Home", href: "/" },
-		{ name: "Search", href: "/search" },
-		{ name: "Blog", href: "/blog" },
-		// { name: "AI Curator", href: "/ai-curator" },
-		// { name: "Pricing", href: "/pricing" },
-	],
+	navItems: {
+		left: [{ name: "Shop", href: "/search" }],
+		right: [{ name: "Magazine", href: "/blog" }],
+	},
 	footerNav: {
 		company: [
 			{ name: "About", href: "/about" },
