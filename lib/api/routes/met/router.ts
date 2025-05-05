@@ -1,16 +1,13 @@
 import { base } from "@/lib/api/orpc";
 import { $fetch } from "@/lib/api/routes/met/fetch";
-import { queue } from "@/lib/api/routes/met/processor";
 import {
 	objectSchema,
 	paginationSchema,
 	sortSchema,
 } from "@/lib/api/routes/met/schema";
 import { ORPCError } from "@orpc/client";
-import { z } from "zod";
-import type { ObjectSchemaType } from "@/lib/api/routes/met/schema";
 import { AsyncQueuer } from "@tanstack/pacer";
-
+import { z } from "zod";
 
 const getArtworks = base
 	// .input(paginationSchema.and(sortSchema))
@@ -125,31 +122,83 @@ const getDepartments = base
 	})
 	.callable();
 
-const sync = base.handler(async () => {
-	const { data, error } = await $fetch("/objects");
+// ┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈
+// Artwork Sync
+// ┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈
 
-	if (error) {
-		throw new ORPCError("INTERNAL_SERVER_ERROR", error);
-	}
-
-	if (!data.objectIDs) {
-		throw new ORPCError("INTERNAL_SERVER_ERROR", {
-			message: "No object IDs found",
-			status: 500,
-		});
-	}
-
-	for (const objectID of data.objectIDs) {
-		queue.addItem(async () => {
-			const object = await $fetch("/objects/:objectID", {
-				params: { objectID },
-				throw: true,
-			});
-
-			return object;
-		});
-	}
+const queue = new AsyncQueuer({
+	concurrency: 3,
+	started: true,
 });
+
+queue.onError((error) => {
+	console.error("Task failed:", error);
+});
+
+queue.onSuccess((result) => {
+	console.info("Task completed:", result);
+});
+
+const sync = base
+	.handler(async () => {
+		const { data, error } = await $fetch("/objects", {
+			next: {
+				revalidate: 86400, // once a day = 60 * 60 * 24 seconds
+				tags: ["met", "objects"],
+			},
+		});
+
+		if (error) {
+			throw new ORPCError("INTERNAL_SERVER_ERROR", error);
+		}
+
+		if (!data.objectIDs) {
+			throw new ORPCError("INTERNAL_SERVER_ERROR", {
+				message: "No object IDs found",
+			});
+		}
+
+		const mediums = new Set();
+		const cultures = new Set();
+		const departments = new Set();
+		const tags = new Set();
+
+		await Promise.all(
+			data.objectIDs.map(async (objectID) => {
+				const object = await $fetch("/objects/:objectID", {
+					params: { objectID },
+					throw: true,
+					next: {
+						revalidate: 86400, // once a day = 60 * 60 * 24 seconds
+						tags: ["met", "objects", String(objectID)],
+					},
+				});
+				if (object?.isPublicDomain) {
+					console.info("Synced artwork", object);
+					mediums.add(object.medium);
+					cultures.add(object.culture);
+					departments.add(object.department);
+					for (const tag of object.tags ?? []) tags.add(tag);
+				}
+			}),
+		);
+
+		await Promise.all([
+			Bun.write("./lib/generated/mediums.json", JSON.stringify([...mediums])),
+			Bun.write("./lib/generated/cultures.json", JSON.stringify([...cultures])),
+			Bun.write(
+				"./lib/generated/departments.json",
+				JSON.stringify([...departments]),
+			),
+			Bun.write("./lib/generated/tags.json", JSON.stringify([...tags])),
+		]);
+
+		console.log(`Synced ${mediums.size} mediums`);
+		console.log(`Synced ${cultures.size} cultures`);
+		console.log(`Synced ${departments.size} departments`);
+		console.log(`Synced ${tags.size} tags`);
+	})
+	.callable();
 
 export const metRouter = {
 	searchArtworks,
@@ -157,4 +206,5 @@ export const metRouter = {
 	getArtworkById,
 	getDepartments,
 	getFeaturedArtwork,
+	sync,
 };

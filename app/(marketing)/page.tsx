@@ -26,6 +26,8 @@ export const metadata: Metadata = {
 };
 
 export default async function Home() {
+	await router.met.sync();
+
 	const featuredArtwork = await router.met.getFeaturedArtwork();
 
 	const { objectIDs } = await router.met.searchArtworks({

@@ -20,50 +20,16 @@ import { meta } from "@/lib/meta";
 import { store } from "@/lib/store";
 import { cn } from "@/lib/utils";
 import { SignedIn, SignedOut, UserButton } from "@daveyplate/better-auth-ui";
-import { Store, useStore } from "@tanstack/react-store";
+import { useStore } from "@tanstack/react-store";
 import { MenuIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef } from "react";
 
 export default function Header() {
-	const ref = useRef<HTMLHeadingElement>(null);
-	const isScrolled = useStore(store, (state) => state.isScrolled);
 	const pathname = usePathname();
-	const isHomePage = pathname === "/";
-
-	useEffect(() => {
-		const handleScroll = () => {
-			if (window.scrollY > 10) {
-				store.setState((state) => ({
-					...state,
-					isScrolled: true,
-				}));
-			} else {
-				store.setState((state) => ({
-					...state,
-					isScrolled: false,
-				}));
-			}
-		};
-
-		window.addEventListener("scroll", handleScroll);
-		return () => window.removeEventListener("scroll", handleScroll);
-	}, []);
-
-	useEffect(() => {
-		if (ref.current) {
-			const rect = ref.current.getBoundingClientRect();
-			store.setState((state) => ({
-				...state,
-				headerHeight: rect.height,
-			}));
-		}
-	}, []);
 
 	return (
 		<header
-			ref={ref}
 			className={cn(
 				"w-full z-50 transition-all duration-200 sticky bg-background top-0 left-0 right-0",
 			)}
@@ -150,16 +116,13 @@ export default function Header() {
 }
 
 function MobileMenu() {
-	const isScrolled = useStore(store, (state) => state.isScrolled);
 	const pathname = usePathname();
-	const isHomePage = pathname === "/";
 
 	return (
 		<Sheet>
 			<SheetTrigger
 				className={cn(
-					"ml-2 rounded-md p-2 transition-colors hover:bg-border/20",
-					isScrolled || !isHomePage ? "text-foreground" : "text-white",
+					"ml-2 rounded-md p-2 text-foreground transition-colors hover:bg-border/20",
 				)}
 			>
 				<MenuIcon className="h-5 w-5" />

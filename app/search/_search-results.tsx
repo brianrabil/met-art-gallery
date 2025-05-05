@@ -32,12 +32,15 @@ import {
 	useSuspenseInfiniteQuery,
 	useSuspenseQuery,
 } from "@tanstack/react-query";
-import { useVirtualizer } from "@tanstack/react-virtual";
+import {
+	type VirtualizerOptions,
+	useVirtualizer,
+} from "@tanstack/react-virtual";
 import { BoxIcon, ChevronDownIcon, HomeIcon } from "lucide-react";
 import Link from "next/link";
 import { useQueryStates } from "nuqs";
 import type React from "react";
-import { Suspense, useEffect, useRef } from "react";
+import { Suspense, useCallback, useEffect, useRef } from "react";
 import { searchParamsParsers } from "./_search-params";
 
 const filters = {
@@ -80,6 +83,10 @@ const sortOptions = [
 export function SearchResults() {
 	const [{ limit, offset, ...searchParams }] =
 		useQueryStates(searchParamsParsers);
+	// The scrollable element for your list
+
+	const parentRef = useRef<HTMLDivElement>(null);
+	const scrollingRef = useRef<number>(null);
 
 	const {
 		data,
@@ -126,9 +133,6 @@ export function SearchResults() {
 				.filter((objectId) => !!objectId) as number[])
 		: [];
 
-	// The scrollable element for your list
-	const parentRef = useRef<HTMLDivElement>(null);
-
 	// The virtualizer
 	const rowVirtualizer = useVirtualizer({
 		count: hasNextPage ? allRows.length + 1 : allRows.length,
@@ -137,6 +141,32 @@ export function SearchResults() {
 		overscan: 5,
 		lanes: 3,
 	});
+
+	const scrollToFn: VirtualizerOptions<any, any>["scrollToFn"] = useCallback(
+		(offset, canSmooth, instance) => {
+			const duration = 1000;
+			const start = parentRef.current?.scrollTop || 0;
+			const startTime = (scrollingRef.current = Date.now());
+
+			const run = () => {
+				if (scrollingRef.current !== startTime) return;
+				const now = Date.now();
+				const elapsed = now - startTime;
+				const progress = easeInOutQuint(Math.min(elapsed / duration, 1));
+				const interpolated = start + (offset - start) * progress;
+
+				if (elapsed < duration) {
+					elementScroll(interpolated, canSmooth, instance);
+					requestAnimationFrame(run);
+				} else {
+					elementScroll(interpolated, canSmooth, instance);
+				}
+			};
+
+			requestAnimationFrame(run);
+		},
+		[],
+	);
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
