@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { getObjectById } from "@/lib/api/router";
+import { router } from "@/lib/api/router";
 import { ArrowLeft, Calendar, Globe, Tag, User } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -50,7 +50,7 @@ export default async function ObjectPage({
 }
 
 async function ObjectDetail({ objectID }: { objectID: number }) {
-	const object = await getObjectById(objectID);
+	const object = await router.met.getArtworkById(objectID);
 
 	if (!object) {
 		notFound();
