@@ -1,4 +1,4 @@
-import { base } from "@/lib/api/orpc";
+import { adminRoute, publicRoute } from "@/lib/api/orpc";
 import { $fetch } from "@/lib/api/routes/met/fetch";
 import {
 	objectSchema,
@@ -9,7 +9,7 @@ import { ORPCError } from "@orpc/client";
 import { AsyncQueuer } from "@tanstack/pacer";
 import { z } from "zod";
 
-const getArtworks = base
+const getArtworks = publicRoute
 	// .input(paginationSchema.and(sortSchema))
 	.handler(async () => {
 		return await $fetch("/objects", {
@@ -18,7 +18,7 @@ const getArtworks = base
 	})
 	.callable();
 
-const getArtworkById = base
+const getArtworkById = publicRoute
 	.input(z.number())
 	.handler(async ({ input }) => {
 		try {
@@ -35,7 +35,7 @@ const getArtworkById = base
 	})
 	.callable();
 
-const searchArtworks = base
+const searchArtworks = publicRoute
 	.input(
 		z.object({
 			q: z.string().default(""),
@@ -81,7 +81,7 @@ const searchArtworks = base
 	})
 	.callable();
 
-const getFeaturedArtwork = base
+const getFeaturedArtwork = publicRoute
 	.output(objectSchema.or(z.null()))
 	.handler(async () => {
 		// Featured artwork IDs with good images
@@ -114,7 +114,7 @@ const getFeaturedArtwork = base
 	})
 	.callable();
 
-const getDepartments = base
+const getDepartments = publicRoute
 	.handler(async () => {
 		return await $fetch("/departments", {
 			throw: true,
@@ -139,7 +139,7 @@ queue.onSuccess((result) => {
 	console.info("Task completed:", result);
 });
 
-const sync = base
+const sync = adminRoute
 	.handler(async () => {
 		const { data, error } = await $fetch("/objects", {
 			next: {

@@ -1,10 +1,32 @@
 import { createClient } from "@libsql/client";
 import { drizzle } from "drizzle-orm/libsql";
+import * as schema from "./schema";
+
+if (!process.env.TURSO_DATABASE_URL) {
+	throw new Error("Missing TURSO_DATABASE_URL environment variable");
+}
+
+if (!process.env.TURSO_AUTH_TOKEN) {
+	throw new Error("Missing TURSO_AUTH_TOKEN environment variable");
+}
+
+if (!process.env.ENCRYPTION_KEY) {
+	throw new Error("Missing ENCRYPTION_KEY environment variable");
+}
+
+if (!process.env.TURSO_SYNC_URL) {
+	throw new Error("Missing TURSO_SYNC_URL environment variable");
+}
 
 const turso = createClient({
-	// biome-ignore lint/style/noNonNullAssertion: <explanation>
-	url: process.env.TURSO_DATABASE_URL!,
+	url: process.env.TURSO_DATABASE_URL,
 	authToken: process.env.TURSO_AUTH_TOKEN,
+	// encryptionKey: process.env.ENCRYPTION_KEY,
+	syncUrl: process.env.TURSO_SYNC_URL,
+	syncInterval: 7 * 24 * 60 * 60, // 7 days in seconds
 });
 
-export const db = drizzle(turso);
+export const db = drizzle(turso, {
+	casing: "snake_case",
+	schema,
+});
