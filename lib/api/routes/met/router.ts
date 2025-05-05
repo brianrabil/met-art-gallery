@@ -168,10 +168,10 @@ const sync = base
 				const object = await $fetch("/objects/:objectID", {
 					params: { objectID },
 					throw: true,
-					next: {
-						revalidate: 86400, // once a day = 60 * 60 * 24 seconds
-						tags: ["met", "objects", String(objectID)],
-					},
+					// next: {
+					// 	revalidate: 86400, // once a day = 60 * 60 * 24 seconds
+					// 	tags: ["met", "objects", String(objectID)],
+					// },
 				});
 				if (object?.isPublicDomain) {
 					console.info("Synced artwork", object);
