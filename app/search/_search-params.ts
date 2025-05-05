@@ -1,4 +1,4 @@
-import { objectSchemaKeys } from "@/lib/schema";
+import { objectSchemaKeys } from "@/lib/api/routes/met/schema";
 import {
 	parseAsBoolean,
 	parseAsInteger,
@@ -22,7 +22,7 @@ export const searchParamsParsers = {
 	dateBegin: parseAsInteger,
 	dateEnd: parseAsInteger,
 	offset: parseAsInteger,
-	limit: parseAsInteger,
+	limit: parseAsInteger.withDefault(12),
 	direction: parseAsStringEnum(["asc", "desc"]).withDefault("desc"),
 	field: parseAsStringEnum(objectSchemaKeys),
 };

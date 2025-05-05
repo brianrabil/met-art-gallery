@@ -50,7 +50,7 @@ export function FilterSidebar({ isSheet = false }) {
 	const [searchParams, setSearchParams] = useQueryStates(searchParamsParsers);
 
 	const { data: departments } = useSuspenseQuery(
-		orpc.getDepartments.queryOptions(),
+		orpc.met.getDepartments.queryOptions(),
 	);
 
 	const form = useForm({

@@ -2,6 +2,13 @@
 
 import { ArtObjectCardSkeleton, ArtworkCard } from "@/components/artwork-card";
 import { Container } from "@/components/container";
+import {
+	Breadcrumb,
+	BreadcrumbItem,
+	BreadcrumbLink,
+	BreadcrumbList,
+	BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import {
 	DropdownMenu,
@@ -9,21 +16,30 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { orpc } from "@/lib/api/client";
-import { getObjectById } from "@/lib/api/router";
+import { router } from "@/lib/api/router";
 import { cn } from "@/lib/utils";
+import NumberFlow from "@number-flow/react";
 import {
 	useSuspenseInfiniteQuery,
 	useSuspenseQuery,
 } from "@tanstack/react-query";
 import { useVirtualizer } from "@tanstack/react-virtual";
-import { BoxIcon, ChevronDownIcon } from "lucide-react";
+import { BoxIcon, ChevronDownIcon, HomeIcon } from "lucide-react";
+import Link from "next/link";
 import { useQueryStates } from "nuqs";
 import type React from "react";
 import { Suspense, useEffect, useRef } from "react";
-import { PAGE_SIZE } from "./_config";
 import { searchParamsParsers } from "./_search-params";
+
 const filters = {
 	price: [
 		{ value: "0", label: "$0 - $25", checked: false },
@@ -60,6 +76,7 @@ const sortOptions = [
 	{ name: "Best Rating", href: "#", current: false },
 	{ name: "Newest", href: "#", current: false },
 ];
+
 export function SearchResults() {
 	const [{ limit, offset, ...searchParams }] =
 		useQueryStates(searchParamsParsers);
@@ -75,11 +92,11 @@ export function SearchResults() {
 		isPending,
 		error,
 	} = useSuspenseInfiniteQuery(
-		orpc.search.infiniteOptions({
+		orpc.met.searchArtworks.infiniteOptions({
 			input: (pageParam) => ({
 				pagination: {
-					limit: PAGE_SIZE,
-					offset: pageParam * PAGE_SIZE,
+					limit,
+					offset: pageParam * limit,
 				},
 				sort: {
 					direction: searchParams.direction ?? undefined,
@@ -117,8 +134,8 @@ export function SearchResults() {
 		count: hasNextPage ? allRows.length + 1 : allRows.length,
 		getScrollElement: () => parentRef.current,
 		estimateSize: () => 320,
-		overscan: 2,
-		lanes: 5,
+		overscan: 5,
+		lanes: 3,
 	});
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
@@ -147,6 +164,7 @@ export function SearchResults() {
 	if (data?.pages.length === 0) {
 		return <EmptyState />;
 	}
+
 	return (
 		<div
 			ref={parentRef}
@@ -158,6 +176,7 @@ export function SearchResults() {
 				<span>Error: {error?.message}</span>
 			) : (
 				<div>
+					<SearchResultsHeader total={allRows.length} />
 					<div
 						style={{
 							height: `${rowVirtualizer.getTotalSize()}px`,
@@ -222,6 +241,15 @@ export function SearchResults() {
 											objectID={allRows[virtualRow.index]}
 										/>
 									</Suspense>
+
+									<button
+										type="button"
+										onClick={() => {
+											rowVirtualizer.scrollToIndex(0);
+										}}
+									>
+										scroll to the top
+									</button>
 								</div>
 							);
 						})}
@@ -258,6 +286,92 @@ export function SearchResults() {
 	);
 }
 
+export function SearchResultsHeader({
+	total,
+}: {
+	total: number;
+}) {
+	return (
+		<div className="bg-muted mb-8 pb-2 border-b border-border">
+			{/* <Breadcrumb>
+				<BreadcrumbList>
+					<BreadcrumbItem>
+						<BreadcrumbLink href="/" asChild>
+							<Link href="/">
+								<HomeIcon strokeWidth={2} className="h-4 w-4" />
+							</Link>
+						</BreadcrumbLink>
+					</BreadcrumbItem>
+					<BreadcrumbSeparator />
+					<BreadcrumbItem>
+						<BreadcrumbLink href="/search" asChild>
+							<Link href="/search">Search</Link>
+						</BreadcrumbLink>
+					</BreadcrumbItem>
+					<BreadcrumbSeparator />
+					<BreadcrumbItem>
+					<BreadcrumbPage>
+						Results{queryParams.q ? ` for ${queryParams.q}` : ""}
+					</BreadcrumbPage>
+				</BreadcrumbItem>
+				</BreadcrumbList>
+			</Breadcrumb> */}
+			<div className="py-12 text-center">
+				<h1 className="mb-4 text-4xl font-bold">Art Collection Search</h1>
+				<p className="mx-auto max-w-3xl px-4 text-muted-foreground">
+					Browse through thousands of artworks from the Metropolitan Museum of
+					Art's vast collection spanning over 5,000 years of world cultures.
+				</p>
+
+				{/* <div className="mt-6 flex justify-center space-x-4">
+										<Link
+											href="#"
+											className="text-muted-foreground hover:text-foreground"
+										>
+											<Github className="h-6 w-6" />
+										</Link>
+										<Link
+											href="#"
+											className="text-muted-foreground hover:text-foreground"
+										>
+											<Twitter className="h-6 w-6" />
+										</Link>
+									</div> */}
+			</div>
+			<div className="flex w-full flex-col items-start justify-between md:flex-row md:items-center">
+				<span className="text-muted-foreground text-sm">
+					<NumberFlow value={total} /> artworks found
+				</span>
+
+				<div className="flex flex-col gap-2 sm:flex-row">
+					<Button variant="outline" className="border-border bg-background">
+						<span className="mr-2 rounded bg-primary px-1.5 py-0.5 text-xs text-primary-foreground">
+							New
+						</span>
+						Advanced Search
+					</Button>
+
+					<Select defaultValue="relevance">
+						<SelectTrigger className="w-[180px]">
+							<SelectValue placeholder="Sort by" />
+						</SelectTrigger>
+						<SelectContent>
+							<SelectItem value="relevance">Search Relevance</SelectItem>
+							<SelectItem value="newest">Newest</SelectItem>
+							<SelectItem value="oldest">Oldest</SelectItem>
+							<SelectItem value="popular">Most Popular</SelectItem>
+						</SelectContent>
+					</Select>
+
+					{/* <div className="lg:hidden">
+								<MobileFilters />
+							</div> */}
+				</div>
+			</div>
+		</div>
+	);
+}
+
 function EmptyState() {
 	return (
 		<div className="flex flex-col items-center justify-center py-20 space-y-4 text-center text-neutral-600 dark:text-neutral-400">
@@ -279,15 +393,19 @@ function SuspensedArtObjectCard({
 	const { data: object } = useSuspenseQuery({
 		queryKey: ["object", objectID],
 		staleTime: Number.POSITIVE_INFINITY,
-		queryFn: () => getObjectById(objectID),
+		queryFn: () => router.met.getArtworkById(objectID),
 	});
 	return <ArtworkCard style={style} object={object} />;
 }
 
-export function SearchResultsSkeleton() {
+export function SearchResultsSkeleton({
+	limit = 12,
+}: {
+	limit?: number;
+}) {
 	return (
 		<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-			{Array(PAGE_SIZE)
+			{Array(limit)
 				.fill(0)
 				.map((_, i) => (
 					// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
@@ -298,48 +416,5 @@ export function SearchResultsSkeleton() {
 					</div>
 				))}
 		</div>
-	);
-}
-
-function MasonryVerticalVirtualizerVariable({ rows }: { rows: Array<number> }) {
-	const parentRef = useRef<HTMLDivElement>(null);
-
-	const rowVirtualizer = useVirtualizer({
-		count: rows.length,
-		getScrollElement: () => parentRef.current,
-		estimateSize: (i) => rows[i],
-		overscan: 8,
-		lanes: 4,
-	});
-
-	return (
-		<>
-			<div ref={parentRef} className="List flex flex-col min-h-[200px]">
-				<div
-					style={{
-						height: `${rowVirtualizer.getTotalSize()}px`,
-						width: "100%",
-						position: "relative",
-					}}
-				>
-					{rowVirtualizer.getVirtualItems().map((virtualRow) => (
-						<div
-							key={virtualRow.index}
-							className={virtualRow.index % 2 ? "ListItemOdd" : "ListItemEven"}
-							style={{
-								position: "absolute",
-								top: 0,
-								left: `${virtualRow.lane * 25}%`,
-								width: "25%",
-								height: `${rows[virtualRow.index]}px`,
-								transform: `translateY(${virtualRow.start}px)`,
-							}}
-						>
-							Row {virtualRow.index}
-						</div>
-					))}
-				</div>
-			</div>
-		</>
 	);
 }

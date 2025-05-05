@@ -1,3 +1,4 @@
+import "server-only";
 import { db } from "@/lib/db/index";
 import * as schema from "@/lib/db/schema";
 import { betterAuth } from "better-auth";

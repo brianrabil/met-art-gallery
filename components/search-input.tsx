@@ -1,4 +1,5 @@
 import { searchParamsParsers } from "@/app/search/_search-params";
+import { Spinner } from "@/components/spinner";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { useForm } from "@tanstack/react-form";
@@ -53,7 +54,7 @@ export function SearchInput({
 				}}
 			>
 				<div className="relative">
-					<div
+					{/* <div
 						className={cn(
 							"pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-3",
 							isTransparent ? "text-white" : "text-muted-foreground",
@@ -77,6 +78,13 @@ export function SearchInput({
 							</div>
 						) : (
 							<SearchIcon />
+						)}
+					</div> */}
+					<div className="z-30 pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-3 text-muted-foreground/80 peer-disabled:opacity-50">
+						{isLoading ? (
+							<Spinner aria-label="Loading..." />
+						) : (
+							<SearchIcon size={16} strokeWidth={2} aria-hidden="true" />
 						)}
 					</div>
 					<form.Field name="query">
@@ -107,7 +115,7 @@ export function SearchInput({
 						)}
 					</form.Field>
 					<button
-						className="absolute inset-y-0 end-0 flex h-full w-9 items-center justify-center rounded-e-lg text-muted-foreground/80 outline-offset-2 transition-colors hover:text-foreground focus:z-10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring/70 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
+						className="absolute inset-y-0 end-0 flex h-full w-9 items-center justify-center rounded-e-lg text-muted-foreground/80 outline-offset-2 transition-colors hover:text-foreground focus:z-10 focus-visible:outline-ring/70 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
 						aria-label="Press to speak"
 						type="submit"
 					>

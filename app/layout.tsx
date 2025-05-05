@@ -38,19 +38,19 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
 	children,
+	header,
 }: Readonly<{
 	children: React.ReactNode;
+	header: React.ReactNode;
 }>) {
 	return (
 		<html lang="en" suppressHydrationWarning>
 			<body className={`${inter.variable} ${playfair.variable} antialiased`}>
 				<NuqsAdapter>
 					<Providers>
-						<SpaceshipScrollbar />
+						{/* <SpaceshipScrollbar /> */}
 						<div className="min-h-screen flex flex-col bg-background">
-							<Suspense>
-								<Header />
-							</Suspense>
+							{header}
 							<main className="flex-1 w-full flex flex-col">{children}</main>
 							<Footer />
 						</div>

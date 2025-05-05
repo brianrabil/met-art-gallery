@@ -1,7 +1,7 @@
 "use client";
 
 import { Skeleton } from "@/components/ui/skeleton";
-import type { getObjectById } from "@/lib/api/router";
+import type { router } from "@/lib/api/router";
 import type { InferRouterOutputs } from "@orpc/server";
 import { CalendarIcon } from "lucide-react";
 import Image from "next/image";
@@ -19,7 +19,7 @@ export function ArtworkCard({
 	style,
 }: {
 	style?: React.CSSProperties;
-	object: Partial<InferRouterOutputs<typeof getObjectById>>;
+	object: Partial<InferRouterOutputs<typeof router.met.getArtworkById>>;
 }) {
 	return (
 		<Link passHref href={`/object/${object?.objectID}`}>

@@ -23,6 +23,13 @@ const inputFocusBlurStyles = tv({
 		feedbackErrorStyle: "flex items-center gap-1 text-xs text-red-300 mt-1",
 	},
 	variants: {
+		search: {
+			true: {
+				inputStyle: "ps-6 pe-6",
+				placeholderStyle: "left-9",
+				feedbackErrorStyle: "left-9",
+			},
+		},
 		error: {
 			true: {
 				baseStyle: "border-red-300",
@@ -70,6 +77,8 @@ export const InputFocusBlur = forwardRef<HTMLInputElement, InputFocusBlurProps>(
 
 		const isError = feedbackError.length > 0 && !disabled;
 
+		const isSearch = props.type === "search";
+
 		const placeholderAnimation: AnimationProps["animate"] = isFocusOrFilled
 			? {
 					x: EIXO_X_PLACEHOLDER,
@@ -80,16 +89,18 @@ export const InputFocusBlur = forwardRef<HTMLInputElement, InputFocusBlurProps>(
 					x: 0,
 				};
 
+		console.log("is Search:", isSearch);
+
 		return (
 			<div className="w-full">
 				<div
-					className={baseStyle({ error: isError, disabled })}
+					className={baseStyle({ error: isError, disabled, search: isSearch })}
 					data-filled={isFilled}
 				>
 					<input
 						ref={ref}
 						type="text"
-						className={inputStyle()}
+						className={inputStyle({ search: isSearch })}
 						placeholder={placeholder}
 						onFocus={(evt) => {
 							onFocus?.(evt);
@@ -99,14 +110,17 @@ export const InputFocusBlur = forwardRef<HTMLInputElement, InputFocusBlurProps>(
 							onBlur?.(evt);
 							handle("blur");
 						}}
-						onChange={observeFieldChange}
+						onChange={(evt) => {
+							onChange?.(evt);
+							observeFieldChange(evt);
+						}}
 						disabled={disabled}
 						value={value}
 						{...props}
 					/>
 
 					<motion.span
-						className={placeholderStyle()}
+						className={placeholderStyle({ search: isSearch })}
 						initial={{
 							x: 0,
 						}}
@@ -122,7 +136,7 @@ export const InputFocusBlur = forwardRef<HTMLInputElement, InputFocusBlurProps>(
 
 				{isError && (
 					<motion.span
-						className={feedbackErrorStyle()}
+						className={feedbackErrorStyle({ search: isSearch })}
 						initial={{
 							opacity: 0,
 						}}

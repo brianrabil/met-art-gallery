@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import type { getRandomFeaturedArtwork } from "@/lib/api/router";
+import type { router } from "@/lib/api/router";
 import type { InferRouterOutputs } from "@orpc/server";
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
@@ -9,7 +9,7 @@ import { Container } from "./container";
 export default function HeroSection({
 	object,
 }: {
-	object: Partial<InferRouterOutputs<typeof getRandomFeaturedArtwork>>;
+	object: Partial<InferRouterOutputs<typeof router.met.getFeaturedArtwork>>;
 }) {
 	return (
 		<section className="relative w-full h-[80vh] min-h-[600px]  flex items-center">
@@ -68,7 +68,7 @@ export default function HeroSection({
 						</div>
 					</div>
 
-					<div className="hidden lg:block bg-black/30 backdrop-blur-sm p-6 rounded-lg border border-white/10">
+					{/* <div className="hidden lg:block bg-black/30 backdrop-blur-sm p-6 rounded-lg border border-white/10">
 						<div className="space-y-4">
 							<h2 className="text-2xl font-medium text-white">
 								{object?.title || "Untitled"}
@@ -93,6 +93,7 @@ export default function HeroSection({
 							</Button>
 						</div>
 					</div>
+				</div> */}
 				</div>
 
 				{/* Attribution */}

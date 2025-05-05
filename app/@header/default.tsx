@@ -8,6 +8,8 @@ import { Container } from "@/components/container";
 import { Logo } from "@/components/logo";
 import { ModeToggle } from "@/components/mode-toggle";
 import { SearchInput } from "@/components/search-input";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 import {
 	Sheet,
 	SheetContent,
@@ -15,6 +17,7 @@ import {
 	SheetTrigger,
 } from "@/components/ui/sheet";
 import { meta } from "@/lib/meta";
+import { store } from "@/lib/store";
 import { cn } from "@/lib/utils";
 import { SignedIn, SignedOut, UserButton } from "@daveyplate/better-auth-ui";
 import { Store, useStore } from "@tanstack/react-store";
@@ -22,35 +25,22 @@ import { MenuIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef } from "react";
-import { Button } from "./ui/button";
-import { Separator } from "./ui/separator";
 
-interface State {
-	isScrolled: boolean;
-	computedHeight: DOMRect["height"];
-}
-
-export const headerStore = new Store<State>({
-	isScrolled: false,
-	computedHeight: 80,
-});
-
-export function Header() {
+export default function Header() {
 	const ref = useRef<HTMLHeadingElement>(null);
-	const isScrolled = useStore(headerStore, (state) => state.isScrolled);
+	const isScrolled = useStore(store, (state) => state.isScrolled);
 	const pathname = usePathname();
 	const isHomePage = pathname === "/";
-	const isSearchPage = pathname === "/search";
 
 	useEffect(() => {
 		const handleScroll = () => {
 			if (window.scrollY > 10) {
-				headerStore.setState((state) => ({
+				store.setState((state) => ({
 					...state,
 					isScrolled: true,
 				}));
 			} else {
-				headerStore.setState((state) => ({
+				store.setState((state) => ({
 					...state,
 					isScrolled: false,
 				}));
@@ -64,9 +54,9 @@ export function Header() {
 	useEffect(() => {
 		if (ref.current) {
 			const rect = ref.current.getBoundingClientRect();
-			headerStore.setState((state) => ({
+			store.setState((state) => ({
 				...state,
-				computedHeight: rect.height,
+				headerHeight: rect.height,
 			}));
 		}
 	}, []);
@@ -75,10 +65,7 @@ export function Header() {
 		<header
 			ref={ref}
 			className={cn(
-				"w-full z-50 transition-all duration-200",
-				isScrolled || (!isHomePage && !isSearchPage)
-					? "bg-background"
-					: "bg-transparent",
+				"w-full z-50 transition-all duration-200 sticky bg-background top-0 left-0 right-0",
 			)}
 		>
 			<Container variant="fluid" className="py-3 md:py-4">
@@ -87,14 +74,7 @@ export function Header() {
 						{/* Logo */}
 						<div>
 							<Link href="/" className="flex items-center space-x-2">
-								<Logo
-									className={cn(
-										"transition-colors",
-										isScrolled || !isHomePage
-											? "text-foreground"
-											: "text-white",
-									)}
-								/>
+								<Logo className={"transition-colors text-foreground"} />
 							</Link>
 						</div>
 
@@ -108,12 +88,7 @@ export function Header() {
 												href={item.href}
 												prefetch
 												data-active={pathname === item.href}
-												className={cn(
-													"text-sm font-medium transition-colors hover:text-primary",
-													isScrolled || !isHomePage
-														? "text-foreground"
-														: "text-white/90",
-												)}
+												className="text-foreground text-sm font-medium transition-colors hover:text-primary"
 											>
 												{item.name}
 											</Link>
@@ -126,11 +101,10 @@ export function Header() {
 
 					{/* Desktop Search */}
 					<div className="w-1/3 flex justify-center items-center">
-						<SearchInput
-							className="lg:min-w-[520px]"
-							isTransparent={!isScrolled && isHomePage}
-						/>
+						<SearchInput className="lg:min-w-[520px]" />
 					</div>
+
+					{/* Right Navigation (Desktop) */}
 					<div className="w-1/3 gap-x-2 hidden md:flex justify-end">
 						<div className="hidden md:flex items-center space-x-6">
 							<nav>
@@ -139,14 +113,8 @@ export function Header() {
 										<li key={item.name}>
 											<Link
 												href={item.href}
-												prefetch
 												data-active={pathname === item.href}
-												className={cn(
-													"text-sm font-medium transition-colors hover:text-primary",
-													isScrolled || !isHomePage
-														? "text-foreground"
-														: "text-white/90",
-												)}
+												className="text-foreground text-sm font-medium transition-colors hover:text-primary"
 											>
 												{item.name}
 											</Link>
@@ -155,21 +123,18 @@ export function Header() {
 								</ul>
 							</nav>
 						</div>
+
 						<ModeToggle
 							variant="ghost"
-							className={cn(
-								isScrolled || !isHomePage
-									? "text-foreground"
-									: "text-white hover:bg-white/10",
-								"h-9 w-9",
-							)}
+							className={cn("text-foreground size-9")}
 						/>
+
 						<SignedIn>
 							<UserButton />
 						</SignedIn>
 						<SignedOut>
 							<Link passHref href="/auth/sign-in">
-								<ButtonBackgroundShine>Account</ButtonBackgroundShine>
+								<Button>Account</Button>
 							</Link>
 						</SignedOut>
 					</div>
@@ -185,7 +150,7 @@ export function Header() {
 }
 
 function MobileMenu() {
-	const isScrolled = useStore(headerStore, (state) => state.isScrolled);
+	const isScrolled = useStore(store, (state) => state.isScrolled);
 	const pathname = usePathname();
 	const isHomePage = pathname === "/";
 

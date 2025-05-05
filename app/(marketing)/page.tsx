@@ -2,11 +2,7 @@ import { ArtworkCard } from "@/components/artwork-card";
 import { Container } from "@/components/container";
 import HeroSection from "@/components/hero-section";
 import { Button } from "@/components/ui/button";
-import {
-	getObjectById,
-	getRandomFeaturedArtwork,
-	search,
-} from "@/lib/api/router";
+import { router } from "@/lib/api/router";
 import { ArrowRightIcon } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -30,9 +26,9 @@ export const metadata: Metadata = {
 };
 
 export default async function Home() {
-	const featuredArtwork = await getRandomFeaturedArtwork();
+	const featuredArtwork = await router.met.getFeaturedArtwork();
 
-	const { objectIDs } = await search({
+	const { objectIDs } = await router.met.searchArtworks({
 		q: "",
 		isHighlight: true,
 		hasImages: true,
@@ -46,7 +42,7 @@ export default async function Home() {
 		objectIDs
 			.filter((objectID) => objectID !== null && objectID !== undefined)
 			.map(async (objectID) => {
-				const obj = await getObjectById(objectID);
+				const obj = await router.met.getArtworkById(objectID);
 				if (obj?.objectID) return obj;
 				return null;
 			}),
@@ -69,7 +65,7 @@ export default async function Home() {
 					<div defaultValue="browse" className="w-full">
 						<div className="w-full h-full grid grid-cols-1 md:grid-cols-3 max-w-7xl mx-auto gap-4 relative">
 							{artworks.map(async (artwork) => (
-								<ArtworkCard key={artwork.objectID} object={artwork} />
+								<ArtworkCard key={artwork?.objectID} object={artwork} />
 							))}
 						</div>
 					</div>
