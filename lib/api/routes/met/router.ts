@@ -1,10 +1,11 @@
-import { adminRoute, publicRoute } from "@/lib/api/orpc";
+import { adminRoute, protectedRoute, publicRoute } from "@/lib/api/orpc";
 import { $fetch } from "@/lib/api/routes/met/fetch";
 import {
 	objectSchema,
 	paginationSchema,
 	sortSchema,
 } from "@/lib/api/routes/met/schema";
+import * as schema from "@/lib/db/schema";
 import { ORPCError } from "@orpc/client";
 import { AsyncQueuer } from "@tanstack/pacer";
 import { z } from "zod";
@@ -83,7 +84,7 @@ const searchArtworks = publicRoute
 
 const getFeaturedArtwork = publicRoute
 	.output(objectSchema.or(z.null()))
-	.handler(async () => {
+	.handler(async ({ context }) => {
 		// Featured artwork IDs with good images
 		const featuredArtworkIds = [
 			436535, // Wheat Field with Cypresses - Van Gogh

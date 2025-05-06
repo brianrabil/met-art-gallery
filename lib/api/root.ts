@@ -1,4 +1,5 @@
 import { metRouter } from "@/lib/api/routes/met/router";
+import { usersRouter } from "@/lib/api/routes/users/router";
 import type {
 	InferRouterInitialContexts,
 	InferRouterInputs,
@@ -7,6 +8,7 @@ import type {
 
 export const router = {
 	met: metRouter,
+	users: usersRouter,
 };
 
 export type InitialContexts = InferRouterInitialContexts<typeof router>;

@@ -6,6 +6,7 @@ import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { Suspense } from "react";
 import "./globals.css";
 import { Footer } from "@/components/footer";
+import { Toaster } from "@/components/ui/sonner";
 import { SpaceshipScrollbar } from "@/components/ui/spaceship-scrollbar";
 
 const inter = Inter({
@@ -54,6 +55,7 @@ export default function RootLayout({
 							<main className="flex-1 w-full flex flex-col">{children}</main>
 							<Footer />
 						</div>
+						<Toaster />
 					</Providers>
 				</NuqsAdapter>
 			</body>

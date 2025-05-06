@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import type { router } from "@/lib/api/router";
+import type { router } from "@/lib/api/root";
 import type { InferRouterOutputs } from "@orpc/server";
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";

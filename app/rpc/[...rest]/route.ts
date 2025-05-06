@@ -1,4 +1,4 @@
-import { router } from "@/lib/api/router";
+import { router } from "@/lib/api/root";
 import { onError } from "@orpc/server";
 import { RPCHandler } from "@orpc/server/fetch";
 import { CORSPlugin } from "@orpc/server/plugins";

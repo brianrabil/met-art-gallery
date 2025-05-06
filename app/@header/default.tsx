@@ -16,10 +16,12 @@ import {
 	SheetHeader,
 	SheetTrigger,
 } from "@/components/ui/sheet";
+import { orpc } from "@/lib/api/client";
 import { meta } from "@/lib/meta";
 import { store } from "@/lib/store";
 import { cn } from "@/lib/utils";
 import { SignedIn, SignedOut, UserButton } from "@daveyplate/better-auth-ui";
+import { useMutation } from "@tanstack/react-query";
 import { useStore } from "@tanstack/react-store";
 import { MenuIcon } from "lucide-react";
 import Link from "next/link";
@@ -27,6 +29,8 @@ import { usePathname } from "next/navigation";
 
 export default function Header() {
 	const pathname = usePathname();
+
+	const $sync = useMutation(orpc.met.sync.mutationOptions());
 
 	return (
 		<header
@@ -39,7 +43,7 @@ export default function Header() {
 					<div className="w-1/3 flex flex-row items-center gap-6 flex-nowrap">
 						{/* Logo */}
 						<div>
-							<Link href="/" className="flex items-center space-x-2">
+							<Link href="/" className="flex items-center">
 								<Logo className={"transition-colors text-foreground"} />
 							</Link>
 						</div>
@@ -103,6 +107,7 @@ export default function Header() {
 								<Button>Account</Button>
 							</Link>
 						</SignedOut>
+						<Button onClick={() => $sync.mutate({})}>Sync</Button>
 					</div>
 
 					{/* Mobile Menu Button */}

@@ -1,7 +1,7 @@
 "use client";
 
 import { Skeleton } from "@/components/ui/skeleton";
-import type { router } from "@/lib/api/router";
+import type { router } from "@/lib/api/root";
 import type { InferRouterOutputs } from "@orpc/server";
 import { CalendarIcon } from "lucide-react";
 import Image from "next/image";

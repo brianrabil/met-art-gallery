@@ -1,48 +1,38 @@
-import { auth } from "@/lib/auth";
+import { getSessionAction } from "@/lib/actions";
 import { db } from "@/lib/db";
 import { os, ORPCError } from "@orpc/server";
-import { headers } from "next/headers";
 
 const base = os.$context();
 
-export const publicRoute = base.use(async ({ context, next }) => {
+export const publicRoute = base.use(async ({ next }) => {
 	return await next({
-		context: db,
+		context: {
+			db,
+		},
 	});
 });
 
-export const protectedRoute = base.use(async ({ context, next }) => {
-	const session = await auth.api.getSession({
-		headers: await headers(),
-	});
-
-	if (!session?.user?.id) {
-		throw new ORPCError("UNAUTHORIZED");
+export const protectedRoute = publicRoute.use(async ({ context, next }) => {
+	const session = await getSessionAction();
+	if (session?.user?.id) {
+		return await next({
+			context: {
+				db: context.db,
+				user: session.user,
+			},
+		});
 	}
-
-	return await next({
-		context: {
-			user: session.user,
-		},
-	});
+	throw new ORPCError("UNAUTHORIZED");
 });
 
 export const adminRoute = protectedRoute.use(async ({ context, next }) => {
-	const session = await auth.api.getSession({
-		headers: await headers(),
-	});
-
-	if (!session?.user?.id) {
-		throw new ORPCError("UNAUTHORIZED");
+	if (context.user.role === "admin") {
+		return await next({
+			context: {
+				db: context.db,
+				user: context.user,
+			},
+		});
 	}
-
-	if (session.user.role !== "admin") {
-		throw new ORPCError("FORBIDDEN");
-	}
-
-	return await next({
-		context: {
-			user: session.user,
-		},
-	});
+	throw new ORPCError("FORBIDDEN");
 });

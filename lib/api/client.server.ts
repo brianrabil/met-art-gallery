@@ -1,4 +1,4 @@
-import { router } from "@/lib/api/router";
+import { router } from "@/lib/api/root";
 import { createORPCReactQueryUtils } from "@orpc/react-query";
 import { createRouterClient } from "@orpc/server";
 

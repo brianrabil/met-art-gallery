@@ -1,21 +1,7 @@
 "use client";
 
 import { ArtObjectCardSkeleton, ArtworkCard } from "@/components/artwork-card";
-import { Container } from "@/components/container";
-import {
-	Breadcrumb,
-	BreadcrumbItem,
-	BreadcrumbLink,
-	BreadcrumbList,
-	BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import {
 	Select,
 	SelectContent,
@@ -23,24 +9,19 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { orpc } from "@/lib/api/client";
-import { router } from "@/lib/api/router";
-import { cn } from "@/lib/utils";
 import NumberFlow from "@number-flow/react";
 import {
 	useSuspenseInfiniteQuery,
 	useSuspenseQuery,
 } from "@tanstack/react-query";
-import {
-	type VirtualizerOptions,
-	useVirtualizer,
-} from "@tanstack/react-virtual";
-import { BoxIcon, ChevronDownIcon, HomeIcon } from "lucide-react";
-import Link from "next/link";
+import { useVirtualizer } from "@tanstack/react-virtual";
+import { BoxIcon } from "lucide-react";
 import { useQueryStates } from "nuqs";
 import type React from "react";
-import { Suspense, useCallback, useEffect, useRef } from "react";
+import { Suspense, useEffect, useRef } from "react";
 import { searchParamsParsers } from "./_search-params";
 
 const filters = {
@@ -74,6 +55,7 @@ const filters = {
 		{ value: "pants-and-shorts", label: "Pants & Shorts", checked: false },
 	],
 };
+
 const sortOptions = [
 	{ name: "Most Popular", href: "#", current: true },
 	{ name: "Best Rating", href: "#", current: false },
@@ -142,31 +124,31 @@ export function SearchResults() {
 		lanes: 3,
 	});
 
-	const scrollToFn: VirtualizerOptions<any, any>["scrollToFn"] = useCallback(
-		(offset, canSmooth, instance) => {
-			const duration = 1000;
-			const start = parentRef.current?.scrollTop || 0;
-			const startTime = (scrollingRef.current = Date.now());
+	// const scrollToFn: VirtualizerOptions<any, any>["scrollToFn"] = useCallback(
+	// 	(offset, canSmooth, instance) => {
+	// 		const duration = 1000;
+	// 		const start = parentRef.current?.scrollTop || 0;
+	// 		const startTime = (scrollingRef.current = Date.now());
 
-			const run = () => {
-				if (scrollingRef.current !== startTime) return;
-				const now = Date.now();
-				const elapsed = now - startTime;
-				const progress = easeInOutQuint(Math.min(elapsed / duration, 1));
-				const interpolated = start + (offset - start) * progress;
+	// 		const run = () => {
+	// 			if (scrollingRef.current !== startTime) return;
+	// 			const now = Date.now();
+	// 			const elapsed = now - startTime;
+	// 			const progress = easeInOutQuint(Math.min(elapsed / duration, 1));
+	// 			const interpolated = start + (offset - start) * progress;
 
-				if (elapsed < duration) {
-					elementScroll(interpolated, canSmooth, instance);
-					requestAnimationFrame(run);
-				} else {
-					elementScroll(interpolated, canSmooth, instance);
-				}
-			};
+	// 			if (elapsed < duration) {
+	// 				elementScroll(interpolated, canSmooth, instance);
+	// 				requestAnimationFrame(run);
+	// 			} else {
+	// 				elementScroll(interpolated, canSmooth, instance);
+	// 			}
+	// 		};
 
-			requestAnimationFrame(run);
-		},
-		[],
-	);
+	// 		requestAnimationFrame(run);
+	// 	},
+	// 	[],
+	// );
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
@@ -237,10 +219,10 @@ export function SearchResults() {
 							}
 
 							// Set gutter (spacing) between cards
-							const GUTTER = 24; // px
+							// const GUTTER = 24; // px
 							const LANES = rowVirtualizer.options.lanes ?? 3;
-							const laneWidth = `calc(${100 / LANES}% - ${(GUTTER * (LANES - 1)) / LANES}px)`;
-							const left = `calc(${virtualRow.lane * (100 / LANES)}% + ${virtualRow.lane * GUTTER}px)`;
+							const laneWidth = `calc(${100 / LANES}% / LANES}px)`;
+							const left = `calc(${virtualRow.lane * (100 / LANES)}%)`;
 
 							return (
 								<div
@@ -251,9 +233,8 @@ export function SearchResults() {
 										top: 0,
 										left,
 										width: laneWidth,
-										height: `${virtualRow.size - GUTTER}px`,
+										height: `${virtualRow.size}px`,
 										transform: `translateY(${virtualRow.start}px)`,
-										padding: `0 0 ${GUTTER}px 0`,
 										boxSizing: "border-box",
 									}}
 								>
@@ -322,7 +303,7 @@ export function SearchResultsHeader({
 	total: number;
 }) {
 	return (
-		<div className="bg-muted mb-8 pb-2 border-b border-border">
+		<div className="mb-8 pb-2">
 			{/* <Breadcrumb>
 				<BreadcrumbList>
 					<BreadcrumbItem>
@@ -398,6 +379,7 @@ export function SearchResultsHeader({
 							</div> */}
 				</div>
 			</div>
+			<Separator />
 		</div>
 	);
 }
@@ -420,11 +402,11 @@ function SuspensedArtObjectCard({
 	objectID,
 	style,
 }: { style?: React.CSSProperties; objectID: number }) {
-	const { data: object } = useSuspenseQuery({
-		queryKey: ["object", objectID],
-		staleTime: Number.POSITIVE_INFINITY,
-		queryFn: () => router.met.getArtworkById(objectID),
-	});
+	const { data: object } = useSuspenseQuery(
+		orpc.met.getArtworkById.queryOptions({
+			input: objectID,
+		}),
+	);
 	return <ArtworkCard style={style} object={object} />;
 }
 

@@ -2,7 +2,7 @@ import { ArtworkCard } from "@/components/artwork-card";
 import { Container } from "@/components/container";
 import HeroSection from "@/components/hero-section";
 import { Button } from "@/components/ui/button";
-import { router } from "@/lib/api/router";
+import { client } from "@/lib/api/client.server";
 import { ArrowRightIcon } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -28,9 +28,9 @@ export const metadata: Metadata = {
 export default async function Home() {
 	// await router.met.sync();
 
-	const featuredArtwork = await router.met.getFeaturedArtwork();
+	const featuredArtwork = await client.met.getFeaturedArtwork();
 
-	const { objectIDs } = await router.met.searchArtworks({
+	const { objectIDs } = await client.met.searchArtworks({
 		q: "",
 		isHighlight: true,
 		hasImages: true,
@@ -44,7 +44,7 @@ export default async function Home() {
 		objectIDs
 			.filter((objectID) => objectID !== null && objectID !== undefined)
 			.map(async (objectID) => {
-				const obj = await router.met.getArtworkById(objectID);
+				const obj = await client.met.getArtworkById(objectID);
 				if (obj?.objectID) return obj;
 				return null;
 			}),

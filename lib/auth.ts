@@ -1,5 +1,6 @@
+import * as authSchema from "@/lib/db/auth-schema";
 import { db } from "@/lib/db/index";
-import * as schema from "@/lib/db/schema";
+import * as appSchema from "@/lib/db/schema";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { admin } from "better-auth/plugins";
@@ -16,7 +17,10 @@ export const auth = betterAuth({
 	database: drizzleAdapter(db, {
 		provider: "sqlite",
 		usePlural: true,
-		schema,
+		schema: {
+			...authSchema,
+			...appSchema,
+		},
 	}),
 	emailAndPassword: {
 		enabled: false,

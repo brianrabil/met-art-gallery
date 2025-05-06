@@ -35,6 +35,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
 			authClient={authClient}
 			navigate={router.push}
 			replace={router.replace}
+			providers={["github"]}
+			redirectTo="/dashboard"
+			credentials={false}
 			onSessionChange={() => {
 				// Clear router cache (protected routes)
 				router.refresh();

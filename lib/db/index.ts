@@ -1,6 +1,9 @@
 import { createClient } from "@libsql/client";
 import { drizzle } from "drizzle-orm/libsql";
-import * as schema from "./schema";
+import * as authSchema from "./auth-schema";
+import * as appSchema from "./schema";
+
+console.log(process.env.TURSO_DATABASE_URL);
 
 if (!process.env.TURSO_DATABASE_URL) {
 	throw new Error("Missing TURSO_DATABASE_URL environment variable");
@@ -21,6 +24,7 @@ if (!process.env.TURSO_SYNC_URL) {
 const turso = createClient({
 	url: process.env.TURSO_DATABASE_URL,
 	authToken: process.env.TURSO_AUTH_TOKEN,
+	offline: true,
 	// encryptionKey: process.env.ENCRYPTION_KEY,
 	syncUrl: process.env.TURSO_SYNC_URL,
 	syncInterval: 7 * 24 * 60 * 60, // 7 days in seconds
@@ -28,5 +32,8 @@ const turso = createClient({
 
 export const db = drizzle(turso, {
 	casing: "snake_case",
-	schema,
+	schema: {
+		...authSchema,
+		...appSchema,
+	},
 });
