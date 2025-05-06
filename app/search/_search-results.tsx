@@ -119,8 +119,8 @@ export function SearchResults() {
 	const rowVirtualizer = useVirtualizer({
 		count: hasNextPage ? allRows.length + 1 : allRows.length,
 		getScrollElement: () => parentRef.current,
-		estimateSize: () => 320,
-		overscan: 5,
+		estimateSize: () => 500,
+		overscan: 12,
 		lanes: 3,
 	});
 
@@ -218,12 +218,9 @@ export function SearchResults() {
 								);
 							}
 
-							// Set gutter (spacing) between cards
-							// const GUTTER = 24; // px
 							const LANES = rowVirtualizer.options.lanes ?? 3;
-							const laneWidth = `calc(${100 / LANES}% / LANES}px)`;
+							const laneWidth = `${100 / LANES}%`;
 							const left = `calc(${virtualRow.lane * (100 / LANES)}%)`;
-
 							return (
 								<div
 									key={virtualRow.key}
@@ -270,29 +267,6 @@ export function SearchResults() {
 			<div>
 				{isFetching && !isFetchingNextPage ? "Background Updating..." : null}
 			</div>
-			{/* <div className="h-full w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-				{data?.pages.map(({ objectIDs, page }) => (
-					<React.Fragment key={page}>
-						{page > 0 ? (
-							<div className="flex items-center gap-4 col-span-1 md:col-span-2 lg:col-span-3">
-								<div className="flex items-center w-full my-8">
-									<Separator className="flex-1" />
-									<span className="mx-4 text-xs text-muted-foreground uppercase tracking-widest">
-										Page {page + 1}
-									</span>
-									<Separator className="flex-1" />
-								</div>
-							</div>
-						) : null}
-						{objectIDs.map((objectID) => (
-							<Suspense key={objectID} fallback={<ArtObjectCardSkeleton />}>
-								<SuspensedArtObjectCard objectID={objectID} />
-							</Suspense>
-						))}
-					</React.Fragment>
-				))}
-				<Button onClick={() => fetchNextPage()}>Load More</Button>
-			</div> */}
 		</div>
 	);
 }

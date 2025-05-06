@@ -1,3 +1,4 @@
+import { Container } from "@/components/container";
 import { SidebarLeft } from "@/components/sidebar-left";
 import { SidebarRight } from "@/components/sidebar-right";
 import {

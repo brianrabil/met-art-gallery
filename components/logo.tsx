@@ -1,3 +1,4 @@
+import { meta } from "@/lib/meta";
 import { cn } from "@/lib/utils";
 
 export function Logo({
@@ -13,7 +14,7 @@ export function Logo({
 				className,
 			)}
 		>
-			Meet the Met
+			{meta.siteName}
 		</span>
 	);
 }

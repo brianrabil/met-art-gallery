@@ -8,7 +8,7 @@ export const meta = {
 	// ──────────────────────────────────────────────────────────────
 	// Brand & Global
 	// ──────────────────────────────────────────────────────────────
-	siteName: "Meet the Met",
+	siteName: "Met Art Gallery",
 	tagline: "Turn Any Wall Into a Gallery—In Seconds",
 	avatar:
 		"https://pbs.twimg.com/profile_images/1902563105386983424/vwXM3kdv_400x400.jpg",
