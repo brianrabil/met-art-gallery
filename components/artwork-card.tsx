@@ -73,14 +73,11 @@ export function ArtworkCard({
 
 export function ArtObjectCardSkeleton() {
 	return (
-		<div className="overflow-hidden w-full h-[520px]  bg-neutral-100 shadow-md dark:bg-neutral-900">
-			<div className="relative w-full h-full">
-				<Skeleton className="absolute inset-0 h-full w-full" />
+		<div className="flex p-2 flex-col h-[520px]">
+			<div className="relative flex-1 w-full h-full">
+				<Skeleton className="absolute rounded-none inset-0 h-[420px] w-full" />
 			</div>
-			<div className="p-6 space-y-3">
-				<Skeleton className="h-8 w-4/5" />
-				<Skeleton className="h-4 w-full" />
-				<Skeleton className="h-4 w-3/4" />
+			<div className="p-6 space-y-3 shrink-0">
 				<div className="flex justify-between items-center pt-2">
 					<Skeleton className="h-4 w-1/3" />
 					<Skeleton className="h-8 w-24 rounded-md" />

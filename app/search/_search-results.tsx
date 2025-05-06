@@ -25,7 +25,7 @@ import { useVirtualizer } from "@tanstack/react-virtual";
 import { BoxIcon, FilterIcon } from "lucide-react";
 import { useQueryStates } from "nuqs";
 import type React from "react";
-import { Suspense, useEffect, useRef } from "react";
+import { Suspense, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { searchParamsParsers } from "./_search-params";
 
 const sortOptions = [
@@ -33,6 +33,8 @@ const sortOptions = [
 	{ name: "Best Rating", href: "#", current: false },
 	{ name: "Newest", href: "#", current: false },
 ];
+
+const MIN_CARD_WIDTH = 320;
 
 export const store = new Store({
 	total: 0,
@@ -44,7 +46,22 @@ export function SearchResults() {
 		useQueryStates(searchParamsParsers);
 
 	const parentRef = useRef<HTMLDivElement>(null);
-	const scrollingRef = useRef<number>(null);
+
+	const [lanes, setLanes] = useState(1);
+
+	useLayoutEffect(() => {
+		const node = parentRef.current;
+		if (!node) return;
+
+		const computeLanes = () =>
+			setLanes(Math.max(1, Math.floor(node.clientWidth / MIN_CARD_WIDTH)));
+
+		computeLanes(); // initial
+
+		const ro = new ResizeObserver(computeLanes);
+		ro.observe(node);
+		return () => ro.disconnect();
+	}, []);
 
 	const {
 		data,
@@ -90,7 +107,6 @@ export function SearchResults() {
 				.filter((objectId) => !!objectId) as number[])
 		: [];
 
-
 	useEffect(() => {
 		store.setState((state) => ({
 			...state,
@@ -105,7 +121,7 @@ export function SearchResults() {
 		getScrollElement: () => parentRef.current,
 		estimateSize: () => 520,
 		overscan: 8,
-		lanes: 3,
+		lanes,
 	});
 
 	// const scrollToFn: VirtualizerOptions<any, any>["scrollToFn"] = useCallback(
@@ -212,9 +228,12 @@ export function SearchResults() {
 								);
 							}
 
-							const LANES = rowVirtualizer.options.lanes ?? 3;
-							const laneWidth = `${100 / LANES}%`;
-							const left = `calc(${virtualRow.lane * (100 / LANES)}%)`;
+							// const LANES = rowVirtualizer.options.lanes ?? 3;
+							// const laneWidth = `${100 / LANES}%`;
+							// const left = `calc(${virtualRow.lane * (100 / LANES)}%)`;
+							const laneCount = rowVirtualizer.options.lanes ?? 1;
+							const laneWidth = `${100 / laneCount}%`;
+							const left = `calc(${virtualRow.lane * (100 / laneCount)}%)`;
 							return (
 								<div
 									key={virtualRow.key}
