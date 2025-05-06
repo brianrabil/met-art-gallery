@@ -41,11 +41,11 @@ export default function Header() {
 		>
 			<Container variant="fluid" className="py-3 md:py-4">
 				<div className="flex items-center w-full h-full gap-6">
-					<div className="w-1/3 flex flex-row items-center gap-6 flex-nowrap">
+					<div className="w-auto md:w-1/3 flex flex-row items-center gap-6 flex-nowrap">
 						{/* Logo */}
-						<div>
-							<Link href="/" className="flex items-center">
-								<Logo className={"transition-colors text-foreground"} />
+						<div className="hidden md:flex">
+							<Link href="/">
+								<Logo />
 							</Link>
 						</div>
 
@@ -72,12 +72,12 @@ export default function Header() {
 					</div>
 
 					{/* Desktop Search */}
-					<div className="w-1/3 flex justify-center items-center">
-						<SearchInput className="lg:min-w-[520px]" />
+					<div className="w-full md:w-1/3 flex justify-center items-center">
+						<SearchInput className="min-w-none w-full lg:min-w-[520px]" />
 					</div>
 
 					{/* Right Navigation (Desktop) */}
-					<div className="w-1/3 gap-x-2 hidden md:flex justify-end">
+					<div className="w-auto md:w-1/3 gap-x-2 flex justify-end">
 						<div className="hidden md:flex items-center space-x-6">
 							{/* <nav>
 								<ul className="flex space-x-6">
@@ -96,24 +96,24 @@ export default function Header() {
 							</nav> */}
 						</div>
 
-						<div className="flex items-center mr-6">
+						<div className="hidden md:flex items-center mr-6">
 							<ThemeSwitcher />
 						</div>
 
-						<SignedIn>
-							<UserButton />
-						</SignedIn>
-						<SignedOut>
-							<Link passHref href="/auth/sign-in">
-								<Button>Account</Button>
-							</Link>
-						</SignedOut>
+						<div className="hidden md:flex">
+							<SignedIn>
+								<UserButton />
+							</SignedIn>
+							<SignedOut>
+								<Link passHref href="/auth/sign-in">
+									<Button>Account</Button>
+								</Link>
+							</SignedOut>
+						</div>
 						{/* <Button onClick={() => $sync.mutate({})}>Sync</Button> */}
-					</div>
-
-					{/* Mobile Menu Button */}
-					<div className="flex items-center md:hidden">
-						<MobileMenu />
+						<div className="flex items-center md:hidden">
+							<MobileMenu />
+						</div>
 					</div>
 				</div>
 			</Container>

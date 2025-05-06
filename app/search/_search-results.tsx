@@ -90,6 +90,7 @@ export function SearchResults() {
 				.filter((objectId) => !!objectId) as number[])
 		: [];
 
+
 	useEffect(() => {
 		store.setState((state) => ({
 			...state,
