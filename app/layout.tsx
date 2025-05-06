@@ -1,21 +1,18 @@
-import { Header } from "@/components/header";
 import { Providers } from "@/components/providers";
-import type { Metadata } from "next";
-import { Inter, Playfair_Display } from "next/font/google";
-import { NuqsAdapter } from "nuqs/adapters/next/app";
-import { Suspense } from "react";
-import "./globals.css";
-import { Footer } from "@/components/footer";
 import { Toaster } from "@/components/ui/sonner";
-import { SpaceshipScrollbar } from "@/components/ui/spaceship-scrollbar";
+import type { Metadata } from "next";
+import { Instrument_Serif, Inter, Playfair_Display } from "next/font/google";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
+import "./globals.css";
 
 const inter = Inter({
 	subsets: ["latin"],
 	variable: "--font-sans",
 });
 
-const playfair = Playfair_Display({
+const playfair = Instrument_Serif({
 	subsets: ["latin"],
+	weight: "400",
 	variable: "--font-serif",
 });
 

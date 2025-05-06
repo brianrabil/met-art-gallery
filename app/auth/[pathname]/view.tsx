@@ -1,19 +1,15 @@
 "use client";
 
-import { headerStore } from "@/components/header";
 import { Logo } from "@/components/logo";
-import { cn } from "@/lib/utils";
+import { orpc } from "@/lib/api/client";
 import { AuthCard } from "@daveyplate/better-auth-ui";
-import { useStore } from "@tanstack/react-store";
+import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 
 export function AuthView({ pathname }: { pathname: string }) {
-	return (
-		// <div
-		// 	className={cn("flex py-16 flex-col grow items-center justify-center")}
-		// >
+	const { data } = useQuery(orpc.met.getFeaturedArtwork.queryOptions());
 
-		// </div>
+	return (
 		<div className="grid min-h-svh lg:grid-cols-2">
 			<div className="flex flex-col gap-4 p-6 md:p-10">
 				<div className="flex justify-center gap-2 md:justify-start">
@@ -29,11 +25,13 @@ export function AuthView({ pathname }: { pathname: string }) {
 				</div>
 			</div>
 			<div className="relative hidden bg-muted lg:block">
-				<img
-					src="/placeholder.svg"
-					alt="placeholder"
-					className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
-				/>
+				{!!data?.primaryImage && (
+					<img
+						src={data?.primaryImage}
+						alt={data?.title ?? "Featured Artwork"}
+						className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
+					/>
+				)}
 			</div>
 		</div>
 	);

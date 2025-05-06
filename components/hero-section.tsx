@@ -43,7 +43,7 @@ export default function HeroSection({
 			<Container className="relative mb-auto z-10 pt-16 flex flex-col justify-center h-[80vh]">
 				<div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
 					<div className="text-white space-y-6">
-						<h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold tracking-tight">
+						<h1 className="text-5xl md:text-5xl lg:text-6xl font-serif italic">
 							Discover Art Masterpieces
 						</h1>
 						<p className="text-lg md:text-xl text-white/90 max-w-lg">

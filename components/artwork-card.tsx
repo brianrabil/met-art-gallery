@@ -3,16 +3,8 @@
 import { Skeleton } from "@/components/ui/skeleton";
 import type { router } from "@/lib/api/root";
 import type { InferRouterOutputs } from "@orpc/server";
-import { CalendarIcon } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardHeader,
-	CardTitle,
-} from "./ui/card";
+import { Card, CardDescription, CardHeader, CardTitle } from "./ui/card";
 
 export function ArtworkCard({
 	object,

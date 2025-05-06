@@ -1,5 +1,6 @@
 "use client";
 
+import { AnimatedTabs, tabStore } from "@/components/animated-tabs";
 import {
 	ButtonBackgroundShine,
 	ButtonRotateBorder,
@@ -8,6 +9,7 @@ import { Container } from "@/components/container";
 import { Logo } from "@/components/logo";
 import { ModeToggle } from "@/components/mode-toggle";
 import { SearchInput } from "@/components/search-input";
+import { ThemeSwitcher } from "@/components/theme-switcher";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -18,7 +20,6 @@ import {
 } from "@/components/ui/sheet";
 import { orpc } from "@/lib/api/client";
 import { meta } from "@/lib/meta";
-import { store } from "@/lib/store";
 import { cn } from "@/lib/utils";
 import { SignedIn, SignedOut, UserButton } from "@daveyplate/better-auth-ui";
 import { useMutation } from "@tanstack/react-query";
@@ -30,7 +31,7 @@ import { usePathname } from "next/navigation";
 export default function Header() {
 	const pathname = usePathname();
 
-	const $sync = useMutation(orpc.met.sync.mutationOptions());
+	// const $sync = useMutation(orpc.met.sync.mutationOptions());
 
 	return (
 		<header
@@ -49,9 +50,10 @@ export default function Header() {
 						</div>
 
 						{/* Desktop Navigation */}
-						<div className="hidden md:flex items-center space-x-6">
+						<div className="hidden md:flex items-center space-x-6 ml-2">
 							<nav>
-								<ul className="flex space-x-6">
+								<AnimatedTabs />
+								{/* <ul className="flex space-x-6">
 									{meta.navItems.left.map((item) => (
 										<li key={item.name}>
 											<Link
@@ -64,7 +66,7 @@ export default function Header() {
 											</Link>
 										</li>
 									))}
-								</ul>
+								</ul> */}
 							</nav>
 						</div>
 					</div>
@@ -77,7 +79,7 @@ export default function Header() {
 					{/* Right Navigation (Desktop) */}
 					<div className="w-1/3 gap-x-2 hidden md:flex justify-end">
 						<div className="hidden md:flex items-center space-x-6">
-							<nav>
+							{/* <nav>
 								<ul className="flex space-x-6">
 									{meta.navItems.right.map((item) => (
 										<li key={item.name}>
@@ -91,13 +93,12 @@ export default function Header() {
 										</li>
 									))}
 								</ul>
-							</nav>
+							</nav> */}
 						</div>
 
-						<ModeToggle
-							variant="ghost"
-							className={cn("text-foreground size-9")}
-						/>
+						<div className="flex items-center mr-6">
+							<ThemeSwitcher />
+						</div>
 
 						<SignedIn>
 							<UserButton />
@@ -107,7 +108,7 @@ export default function Header() {
 								<Button>Account</Button>
 							</Link>
 						</SignedOut>
-						<Button onClick={() => $sync.mutate({})}>Sync</Button>
+						{/* <Button onClick={() => $sync.mutate({})}>Sync</Button> */}
 					</div>
 
 					{/* Mobile Menu Button */}
