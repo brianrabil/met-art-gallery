@@ -1,9 +1,10 @@
-import { getAllPosts, getPostBySlug } from "@/app/blog/api";
+import { getPostBySlug } from "@/app/blog/api";
 import { Container } from "@/components/container";
 import { MdxLayout } from "@/components/mdx-layout";
 import { meta } from "@/lib/meta";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { posts } from "../api";
 
 type Params = {
 	params: Promise<{
@@ -13,7 +14,7 @@ type Params = {
 
 export async function generateMetadata(props: Params): Promise<Metadata> {
 	const params = await props.params;
-	const post = getPostBySlug(params.slug);
+	const post = posts.find(({ slug }) => slug === params.slug);
 
 	if (!post) {
 		return notFound();
@@ -33,8 +34,6 @@ export async function generateMetadata(props: Params): Promise<Metadata> {
 }
 
 export async function generateStaticParams() {
-	const posts = getAllPosts();
-
 	return posts.map((post) => ({
 		slug: post.slug,
 	}));
@@ -47,8 +46,6 @@ export default async function Page({
 }) {
 	const { slug } = await params;
 	const { default: Post } = await import(`@/content/${slug}.mdx`);
-	// TODO: Read metadata better
-	const post = getPostBySlug(slug);
 
 	if (!slug) {
 		return notFound();
