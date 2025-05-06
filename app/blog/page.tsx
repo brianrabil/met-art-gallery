@@ -1,8 +1,14 @@
-import { HeroPost, Intro, MoreStories } from "@/components/blog-post";
+import {
+	HeroPost,
+	Intro,
+	MoreStories,
+	type Post,
+} from "@/components/blog-post";
 import { Container } from "@/components/container";
 
-const posts = [
+const posts: Post[] = [
 	{
+		slug: "photograph-your-wall-like-a-pro",
 		title:
 			"Photograph Your Wall Like a Pro: The Quick Guide for Perfect AR Previews",
 		excerpt:
@@ -20,6 +26,7 @@ const posts = [
 		},
 	},
 	{
+		slug: "impressionist-color-trends-2025",
 		title: "5 Impressionist Color Trends Designers Are Loving in 2025",
 		excerpt:
 			"From ‘Mist-Blue Monets’ to ‘Renoir Rosewood’, see how century-old palettes are steering today’s paint decks, textiles, and AR-enhanced wall art.",
@@ -41,6 +48,7 @@ const posts = [
 		date: "2025-05-02T00:00:00.000Z",
 		coverImage:
 			"https://images.metmuseum.org/CRDImages/ep/web-large/DT1854.jpg",
+		tags: [],
 		author: {
 			name: "Editorial Board",
 			picture: "/avatar.png",
@@ -61,6 +69,7 @@ const posts = [
 		title: "How to Style Your Bedroom Like Van Gogh’s Masterpiece",
 		date: "2025-06-15T00:00:00.000Z",
 		coverImage: "https://images.metmuseum.org/CRDImages/ep/original/DT1567.jpg",
+		tags: [],
 		author: {
 			name: "Samantha Lee",
 			picture: "/avatar2.png",
@@ -81,6 +90,7 @@ const posts = [
 		date: "2025-05-06T00:00:00.000Z",
 		coverImage:
 			"https://images.metmuseum.org/CRDImages/ep/original/DP145918.jpg",
+		tags: [],
 		author: {
 			name: "Editorial Board",
 			picture: "/avatar.png",
@@ -99,6 +109,7 @@ const posts = [
 		slug: "van-gogh-color-palettes-contemporary-interiors",
 		title: "Van Gogh Color Palettes for Contemporary Interiors",
 		date: "2025-05-06T00:00:00.000Z",
+		tags: [],
 		coverImage:
 			"https://images.metmuseum.org/CRDImages/ep/original/DP229743.jpg",
 		author: {
@@ -122,6 +133,10 @@ export default function Index() {
 	const heroPost = allPosts[allPosts.length - 1];
 	const morePosts = allPosts.slice(0, allPosts.length - 1);
 
+	if (!heroPost) {
+		throw new Error("Could not find hero post");
+	}
+
 	return (
 		<>
 			<Container>
@@ -131,7 +146,7 @@ export default function Index() {
 					coverImage={heroPost.coverImage}
 					date={heroPost.date}
 					author={heroPost.author}
-					slug={heroPost.slug}
+					slug={heroPost.slug as string}
 					excerpt={heroPost.excerpt}
 				/>
 				{morePosts.length > 0 && <MoreStories posts={morePosts} />}

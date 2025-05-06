@@ -1,6 +1,5 @@
 "use client";
 
-import { setDefaultAutoSelectFamily } from "net";
 import { Store, useStore } from "@tanstack/react-store";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";

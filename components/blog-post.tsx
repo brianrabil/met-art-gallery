@@ -21,15 +21,16 @@ export type Post = {
 	slug: string;
 	title: string;
 	date: string;
-	coverImage: string;
-	author: Author;
-	excerpt: string;
-	categories: string[];
-	photoCredit: string;
+	coverImage?: string;
+	author?: Author;
+	excerpt?: string;
+	tags: string[];
+	categories?: string[];
+	photoCredit?: string;
 	ogImage: {
 		url: string;
 	};
-	content: string;
+	content?: string;
 	preview?: boolean;
 };
 
@@ -42,13 +43,13 @@ const CoverImage = ({
 	src,
 	slug,
 }: {
-	title: string;
-	src: string;
+	title?: string;
+	src?: string;
 	slug?: string;
 }) => {
 	const image = (
 		<Image
-			src={src}
+			src={src ?? "/placeholder.png"}
 			alt={`Cover Image for ${title}`}
 			className={cn("shadow-sm w-full object-cover", {
 				"hover:shadow-lg transition-shadow duration-200": slug,
@@ -82,12 +83,12 @@ export function PostPreview({
 	author,
 	slug,
 }: {
-	title: string;
-	coverImage: string;
-	date: string;
-	excerpt: string;
-	author: Author;
-	slug: string;
+	title?: string;
+	coverImage?: string;
+	date?: string;
+	excerpt?: string;
+	author?: Author;
+	slug?: string;
 }) {
 	return (
 		<div>
@@ -99,23 +100,30 @@ export function PostPreview({
 					{title}
 				</Link>
 			</h3>
-			<div className="text-base mb-4">
-				<DateFormatter dateString={date} />
-			</div>
+			{!!date && (
+				<div className="text-base mb-4">
+					<DateFormatter dateString={date} />
+				</div>
+			)}
 			<p className="text-lg leading-relaxed mb-4">{excerpt}</p>
 			<div className="flex items-center gap-2">
-				<Avatar>
-					<AvatarImage src={author.picture} alt={author.name} />
-					<AvatarFallback>
-						{author.name
-							.split(" ")
-							.map((n) => n[0])
-							.join("")
-							.slice(0, 2)
-							.toUpperCase()}
-					</AvatarFallback>
-				</Avatar>
-				<div className="text-lg font-bold">{author.name}</div>
+				{author && (
+					<>
+						<Avatar>
+							<AvatarImage src={author.picture} alt={author.name} />
+							<AvatarFallback>
+								{author.name
+									.split(" ")
+									.map((n) => n[0])
+									.join("")
+									.slice(0, 2)
+									.toUpperCase()}
+							</AvatarFallback>
+						</Avatar>
+
+						<div className="text-lg font-bold">{author.name}</div>
+					</>
+				)}
 			</div>
 		</div>
 	);
@@ -321,13 +329,14 @@ export function HeroPost({
 	author,
 	slug,
 }: {
-	title: string;
-	coverImage: string;
-	date: string;
-	excerpt: string;
-	author: Author;
-	slug: string;
+	title?: string;
+	coverImage?: string;
+	date?: string;
+	excerpt?: string;
+	author?: Author;
+	slug?: string;
 }) {
+	if (!slug) return null;
 	return (
 		<section>
 			<div className="mb-8 md:mb-16">
@@ -343,26 +352,30 @@ export function HeroPost({
 							{title}
 						</Link>
 					</h3>
-					<div className="mb-4 md:mb-0 text-base">
-						<DateFormatter dateString={date} />
-					</div>
+					{!!date && (
+						<div className="mb-4 md:mb-0 text-base">
+							<DateFormatter dateString={date} />
+						</div>
+					)}
 				</div>
 				<div>
 					<p className="text-lg leading-relaxed mb-4">{excerpt}</p>
-					<div className="flex items-center gap-2">
-						<Avatar>
-							<AvatarImage src={author.picture} alt={author.name} />
-							<AvatarFallback>
-								{author.name
-									.split(" ")
-									.map((n) => n[0])
-									.join("")
-									.slice(0, 2)
-									.toUpperCase()}
-							</AvatarFallback>
-						</Avatar>
-						<div className="text-lg font-bold">{author.name}</div>
-					</div>
+					{!!author && (
+						<div className="flex items-center gap-2">
+							<Avatar>
+								<AvatarImage src={author.picture} alt={author.name} />
+								<AvatarFallback>
+									{author.name
+										.split(" ")
+										.map((n) => n[0])
+										.join("")
+										.slice(0, 2)
+										.toUpperCase()}
+								</AvatarFallback>
+							</Avatar>
+							<div className="text-lg font-bold">{author.name}</div>
+						</div>
+					)}
 				</div>
 			</div>
 		</section>
