@@ -1,0 +1,54 @@
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { DateFormatter } from "@/components/date-formatter";
+
+# Photograph Your Wall Like a Pro: The Quick Guide for Perfect AR Previews
+
+<div className="mb-6 flex items-center gap-4">
+  <Avatar>
+    <AvatarImage src="/avatar.png" alt="Editorial Board" />
+    <AvatarFallback>EB</AvatarFallback>
+  </Avatar>
+  <div>
+    <span className="font-semibold">By Editorial Board</span>
+    <span className="block text-sm text-muted-foreground">
+      Posted on <DateFormatter dateString="2025-05-06T00:00:00.000Z" />
+    </span>
+  </div>
+</div>
+
+A flawless **PaletteMatch AR** preview starts with a sharp, distortion-free wall photo. Follow these five micro-steps and you’ll capture calibration-ready images in under a minute.
+
+## 1. Tape the Target
+
+- Print the **A4/Letter target sheet** from the app.
+- Center it at approximate eye level; use painter’s tape to avoid residue.
+
+## 2. Step Back Exactly 8 ft / 2.5 m
+
+Phone lenses distort less at moderate distance, giving the AI cleaner geometry.
+
+## 3. Square Up
+
+Hold the phone so the sheet’s edges appear parallel to your screen—you’ll hear a *beep* once the internal gyroscope detects < 2° tilt.
+
+## 4. Flood the Scene with Soft Light
+
+Avoid down-lights that cast harsh shadows. Natural window light or a diffused floor lamp yields texture-true color for ΔE < 3 accuracy.
+
+## 5. Snap in Portrait Mode (Yes, Really)
+
+Most modern phones isolate the mid-plane in portrait mode, reducing background blur—but our algorithms keep the target razor-sharp.
+
+> **Pro-Tip** — If your room is dim, switch on the phone’s “RAW” setting; uncompressed data improves wall-edge detection by 12 %.
+
+---
+
+### What Happens Next?
+
+1. **Edge Detection** isolates your wall, trimming baseboards and crown molding.
+2. **Depth Estimation** turns target sheet pixels into millimeters.
+3. **Color Profiling** measures dominant hues using CIELAB, ensuring art and frames land within ΔE ≤ 10 of your palette.
+
+Hit *Confirm* and watch the artwork snap into perfect scale—no measuring tape required.
+
+*Images and trademarks © PaletteMatch AR.*

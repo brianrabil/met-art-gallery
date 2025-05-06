@@ -3,6 +3,39 @@ import { Container } from "@/components/container";
 
 const posts = [
 	{
+		title:
+			"Photograph Your Wall Like a Pro: The Quick Guide for Perfect AR Previews",
+		excerpt:
+			"Nail the one-minute photo shoot that makes PaletteMatch AR’s sizing and color-matching pixel-perfect—no DSLR required.",
+		coverImage: "/images/blog/wall-photo-guide.jpg",
+		categories: ["How-To", "AR Tips"],
+		tags: ["PaletteMatch AR", "interior photography", "art tech"],
+		date: "2025-05-06T00:00:00.000Z",
+		author: {
+			name: "Editorial Board",
+			picture: "/avatar.png",
+		},
+		ogImage: {
+			url: "/images/blog/wall-photo-guide-og.jpg",
+		},
+	},
+	{
+		title: "5 Impressionist Color Trends Designers Are Loving in 2025",
+		excerpt:
+			"From ‘Mist-Blue Monets’ to ‘Renoir Rosewood’, see how century-old palettes are steering today’s paint decks, textiles, and AR-enhanced wall art.",
+		coverImage: "/images/blog/impressionist-color-trends-2025.jpg",
+		categories: ["Art", "Color Trends"],
+		tags: ["Impressionism", "color palettes", "interior design"],
+		date: "2025-05-06T00:00:00.000Z",
+		author: {
+			name: "Editorial Board",
+			picture: "/avatar.png",
+		},
+		ogImage: {
+			url: "/images/blog/impressionist-color-trends-2025-og.jpg",
+		},
+	},
+	{
 		slug: "top-10-impressionist-paintings-met-modern-home",
 		title: "Top 10 Impressionist Paintings from The Met for Modern Home",
 		date: "2025-05-02T00:00:00.000Z",
