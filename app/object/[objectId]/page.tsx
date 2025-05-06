@@ -28,7 +28,7 @@ export default async function ObjectPage({
 
 	return (
 		<Container className="container mx-auto px-4 py-8">
-			<Breadcrumb className="mb-4">
+			{/* <Breadcrumb className="mb-4">
 				<BreadcrumbItem>
 					<BreadcrumbLink asChild>
 						<Link href="/">Home</Link>
@@ -37,7 +37,7 @@ export default async function ObjectPage({
 				<BreadcrumbItem>
 					<BreadcrumbLink>Search Results</BreadcrumbLink>
 				</BreadcrumbItem>
-			</Breadcrumb>
+			</Breadcrumb> */}
 			<div className="mb-6">
 				<BackButton />
 			</div>

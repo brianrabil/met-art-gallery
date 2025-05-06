@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "./ui/button";
 
 export function BackButton({
-	children = "Back to the previous route",
+	children = "Back",
 }: {
 	children?: React.ReactNode;
 }) {
