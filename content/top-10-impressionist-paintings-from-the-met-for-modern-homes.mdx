@@ -1,22 +1,24 @@
----
-title: "Top 10 Impressionist Paintings from The Met for Modern Homes"
-excerpt: "Discover ten timeless Impressionist masterpieces—each in the public domain—perfectly suited for contemporary interiors, complete with hi-res images ready for PaletteMatch AR previews, fine-art prints, or digital décor."
-coverImage: "https://images.metmuseum.org/CRDImages/ep/original/DT1854.jpg"
-categories: ["Art", "Impressionism"]
-date: "2025-05-02T00:00:00.000Z"
-author:
-  name: Editorial Board
-  picture: "/avatar.png"
-ogImage:
-  url: "https://images.metmuseum.org/CRDImages/ep/original/DT1854.jpg"
----
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {DateFormatter} from "@/components/date-formatter";
 
-> **Why these works?**
-> • All images are public-domain files from the Metropolitan Museum of Art (Open Access).
-> • Each canvas boasts color harmonies and balanced composition that slip effortlessly into minimalist, Scandinavian, or eclectic modern rooms.
-> • Hi-res files below are suitable for PaletteMatch AR previews, gallery-grade giclée prints, or digital wallpapers.
+# Top 10 Impressionist Paintings from The Met for Modern Home
 
----
+Discover ten timeless Impressionist masterpieces—each in the public domain—perfectly suited for contemporary interiors, complete with hi-res images ready for PaletteMatch AR previews, fine-art prints, or digital décor.
+
+<div className="mb-6 flex items-center gap-4">
+	<Avatar>
+		<AvatarImage src="/avatar.png" alt="Editorial Board" />
+		<AvatarFallback>
+			EB
+		</AvatarFallback>
+	</Avatar>
+	<div>
+		<span className="font-semibold">By Editorial Board</span>
+		<span className="text-sm text-muted-foreground">
+			Posted on <DateFormatter dateString="2025-05-02T00:00:00.000Z" />
+		</span>
+	</div>
+</div>
 
 ## 1. Claude Monet — *Bridge over a Pond of Water Lilies* (1899)
 

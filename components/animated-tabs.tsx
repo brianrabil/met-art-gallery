@@ -1,7 +1,8 @@
 "use client";
 
+import { setDefaultAutoSelectFamily } from "net";
 import { Store, useStore } from "@tanstack/react-store";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
 const TABS = [
@@ -19,6 +20,7 @@ export function AnimatedTabs() {
 	const activeTab = useStore(tabStore, (state) => state.activeTab);
 	const containerRef = useRef<HTMLDivElement>(null);
 	const activeTabRef = useRef<HTMLButtonElement>(null);
+	const pathname = usePathname();
 
 	// tabStore.subscribe((state) => {
 	// 	const route = TABS.find(
@@ -46,6 +48,19 @@ export function AnimatedTabs() {
 			}
 		}
 	}, [activeTab, activeTabRef, containerRef]);
+
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+	useEffect(() => {
+		if (pathname) {
+			const initialTab = TABS.find(({ href }) => href === pathname);
+			if (initialTab) {
+				tabStore.setState((state) => ({
+					...state,
+					activeTab: initialTab?.label,
+				}));
+			}
+		}
+	}, []);
 
 	return (
 		<div className="relative mx-auto flex w-fit flex-col items-center rounded-full">
