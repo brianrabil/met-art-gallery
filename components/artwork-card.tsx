@@ -25,15 +25,15 @@ export function ArtworkCard({
 		<Link passHref href={`/object/${object?.objectID}`}>
 			<Card
 				style={style}
-				className="group relative h-[520] w-full pt-0 overflow-hidden shadow-none transition-all duration-300"
+				className="bg-transparent border-none group relative h-[500] w-full p-4 overflow-hidden rounded-none shadow-none"
 			>
-				<div className="relative aspect-[3/4] w-full overflow-hidden p-0 transition-transform duration-700 group-hover:scale-105">
+				<div className="relative  w-full h-full overflow-hidden p-0 duration-700">
 					{object?.primaryImageSmall ? (
 						<Image
 							src={object.primaryImageSmall}
 							alt={object.title || "Untitled"}
 							fill
-							className="object-contain absolute inset-0"
+							className="object-cover absolute inset-0"
 							sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
 							priority
 						/>
@@ -45,7 +45,7 @@ export function ArtworkCard({
 						</div>
 					)}
 				</div>
-				<CardHeader>
+				<CardHeader className="px-0">
 					{/* Top tagline */}
 					{/* {object?.isHighlight && (
 						<div className="text-xs tracking-wide">Featured Artwork</div>
@@ -60,7 +60,7 @@ export function ArtworkCard({
 
 					{/* <p className="text-sm font-light line-clamp-2">{object?.medium}</p> */}
 					{/* Bottom tags */}
-					<div className="flex flex-wrap gap-2">
+					{/* <div className="flex flex-wrap gap-2">
 						{object?.department && (
 							<span className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs">
 								{object.department}
@@ -72,7 +72,7 @@ export function ArtworkCard({
 								{object.objectDate}
 							</span>
 						)}
-					</div>
+					</div> */}
 				</CardHeader>
 			</Card>
 		</Link>
@@ -81,8 +81,8 @@ export function ArtworkCard({
 
 export function ArtObjectCardSkeleton() {
 	return (
-		<div className="overflow-hidden rounded-3xl bg-neutral-100 shadow-md dark:bg-neutral-900">
-			<div className="relative aspect-[3/4] w-full">
+		<div className="overflow-hidden w-full h-[520px]  bg-neutral-100 shadow-md dark:bg-neutral-900">
+			<div className="relative w-full h-full">
 				<Skeleton className="absolute inset-0 h-full w-full" />
 			</div>
 			<div className="p-6 space-y-3">

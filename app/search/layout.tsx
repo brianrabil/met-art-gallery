@@ -7,14 +7,18 @@ import {
 	BreadcrumbList,
 	BreadcrumbPage,
 } from "@/components/ui/breadcrumb";
+import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import {
 	SidebarInset,
 	SidebarProvider,
-	SidebarTrigger,
+	useSidebar,
 } from "@/components/ui/sidebar";
+import { cn } from "@/lib/utils";
+import { FilterIcon, PanelLeftIcon } from "lucide-react";
 import { Suspense } from "react";
 import { FilterSidebar, FilterSidebarSkeleton } from "./_filter-sidebar";
+import { ResultsCount, SidebarTrigger } from "./_search-results";
 
 export default async function Layout({
 	children,
@@ -35,7 +39,7 @@ export default async function Layout({
 							<BreadcrumbList>
 								<BreadcrumbItem>
 									<BreadcrumbPage className="line-clamp-1">
-										Project Management & Task Tracking
+										<ResultsCount />
 									</BreadcrumbPage>
 								</BreadcrumbItem>
 							</BreadcrumbList>

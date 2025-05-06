@@ -1,6 +1,7 @@
 "use client";
 
 import { ArtObjectCardSkeleton, ArtworkCard } from "@/components/artwork-card";
+import { Spinner } from "@/components/spinner";
 import { Button } from "@/components/ui/button";
 import {
 	Select,
@@ -10,51 +11,22 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
+import { useSidebar } from "@/components/ui/sidebar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { orpc } from "@/lib/api/client";
+import { cn } from "@/lib/utils";
 import NumberFlow from "@number-flow/react";
 import {
 	useSuspenseInfiniteQuery,
 	useSuspenseQuery,
 } from "@tanstack/react-query";
+import { Store, useStore } from "@tanstack/react-store";
 import { useVirtualizer } from "@tanstack/react-virtual";
-import { BoxIcon } from "lucide-react";
+import { BoxIcon, FilterIcon } from "lucide-react";
 import { useQueryStates } from "nuqs";
 import type React from "react";
 import { Suspense, useEffect, useRef } from "react";
 import { searchParamsParsers } from "./_search-params";
-
-const filters = {
-	price: [
-		{ value: "0", label: "$0 - $25", checked: false },
-		{ value: "25", label: "$25 - $50", checked: false },
-		{ value: "50", label: "$50 - $75", checked: false },
-		{ value: "75", label: "$75+", checked: false },
-	],
-	color: [
-		{ value: "white", label: "White", checked: false },
-		{ value: "beige", label: "Beige", checked: false },
-		{ value: "blue", label: "Blue", checked: true },
-		{ value: "brown", label: "Brown", checked: false },
-		{ value: "green", label: "Green", checked: false },
-		{ value: "purple", label: "Purple", checked: false },
-	],
-	size: [
-		{ value: "xs", label: "XS", checked: false },
-		{ value: "s", label: "S", checked: true },
-		{ value: "m", label: "M", checked: false },
-		{ value: "l", label: "L", checked: false },
-		{ value: "xl", label: "XL", checked: false },
-		{ value: "2xl", label: "2XL", checked: false },
-	],
-	category: [
-		{ value: "all-new-arrivals", label: "All New Arrivals", checked: false },
-		{ value: "tees", label: "Tees", checked: false },
-		{ value: "objects", label: "Objects", checked: false },
-		{ value: "sweatshirts", label: "Sweatshirts", checked: false },
-		{ value: "pants-and-shorts", label: "Pants & Shorts", checked: false },
-	],
-};
 
 const sortOptions = [
 	{ name: "Most Popular", href: "#", current: true },
@@ -62,10 +34,14 @@ const sortOptions = [
 	{ name: "Newest", href: "#", current: false },
 ];
 
+export const store = new Store({
+	total: 0,
+	loaded: 0,
+});
+
 export function SearchResults() {
 	const [{ limit, offset, ...searchParams }] =
 		useQueryStates(searchParamsParsers);
-	// The scrollable element for your list
 
 	const parentRef = useRef<HTMLDivElement>(null);
 	const scrollingRef = useRef<number>(null);
@@ -76,7 +52,6 @@ export function SearchResults() {
 		hasNextPage,
 		isFetchingNextPage,
 		isFetching,
-		isLoading,
 		status,
 		isPending,
 		error,
@@ -115,12 +90,20 @@ export function SearchResults() {
 				.filter((objectId) => !!objectId) as number[])
 		: [];
 
+	useEffect(() => {
+		store.setState((state) => ({
+			...state,
+			total: data.pages[0]?.total,
+			loaded: allRows.length,
+		}));
+	}, [allRows.length, data.pages[0]?.total]);
+
 	// The virtualizer
 	const rowVirtualizer = useVirtualizer({
 		count: hasNextPage ? allRows.length + 1 : allRows.length,
 		getScrollElement: () => parentRef.current,
-		estimateSize: () => 500,
-		overscan: 12,
+		estimateSize: () => 520,
+		overscan: 8,
 		lanes: 3,
 	});
 
@@ -183,7 +166,10 @@ export function SearchResults() {
 			className="max-w-screen w-full overflow-y-auto h-screen max-h-screen min-h-screen"
 		>
 			{isPending ? (
-				<p>Loading...</p>
+				<p className="flex items-center gap-2">
+					<Spinner />
+					Loading...
+				</p>
 			) : status === "error" ? (
 				<span>Error: {error?.message}</span>
 			) : (
@@ -213,7 +199,14 @@ export function SearchResults() {
 										}}
 										className="flex justify-center items-center"
 									>
-										{hasNextPage ? "Loading more..." : "No more items to load"}
+										{hasNextPage ? (
+											<div className="flex items-center gap-2">
+												<Spinner />
+												Loading...
+											</div>
+										) : (
+											"No more items to load"
+										)}
 									</div>
 								);
 							}
@@ -224,7 +217,6 @@ export function SearchResults() {
 							return (
 								<div
 									key={virtualRow.key}
-									className="transition-shadow"
 									style={{
 										position: "absolute",
 										top: 0,
@@ -249,15 +241,6 @@ export function SearchResults() {
 											objectID={allRows[virtualRow.index]}
 										/>
 									</Suspense>
-
-									<button
-										type="button"
-										onClick={() => {
-											rowVirtualizer.scrollToIndex(0);
-										}}
-									>
-										scroll to the top
-									</button>
 								</div>
 							);
 						})}
@@ -277,53 +260,15 @@ export function SearchResultsHeader({
 	total: number;
 }) {
 	return (
-		<div className="mb-8 pb-2">
-			{/* <Breadcrumb>
-				<BreadcrumbList>
-					<BreadcrumbItem>
-						<BreadcrumbLink href="/" asChild>
-							<Link href="/">
-								<HomeIcon strokeWidth={2} className="h-4 w-4" />
-							</Link>
-						</BreadcrumbLink>
-					</BreadcrumbItem>
-					<BreadcrumbSeparator />
-					<BreadcrumbItem>
-						<BreadcrumbLink href="/search" asChild>
-							<Link href="/search">Search</Link>
-						</BreadcrumbLink>
-					</BreadcrumbItem>
-					<BreadcrumbSeparator />
-					<BreadcrumbItem>
-					<BreadcrumbPage>
-						Results{queryParams.q ? ` for ${queryParams.q}` : ""}
-					</BreadcrumbPage>
-				</BreadcrumbItem>
-				</BreadcrumbList>
-			</Breadcrumb> */}
+		<div className="mb-6 pb-2">
 			<div className="py-12 text-center">
 				<h1 className="mb-4 text-4xl font-bold">Art Collection Search</h1>
 				<p className="mx-auto max-w-3xl px-4 text-muted-foreground">
 					Browse through thousands of artworks from the Metropolitan Museum of
 					Art's vast collection spanning over 5,000 years of world cultures.
 				</p>
-
-				{/* <div className="mt-6 flex justify-center space-x-4">
-										<Link
-											href="#"
-											className="text-muted-foreground hover:text-foreground"
-										>
-											<Github className="h-6 w-6" />
-										</Link>
-										<Link
-											href="#"
-											className="text-muted-foreground hover:text-foreground"
-										>
-											<Twitter className="h-6 w-6" />
-										</Link>
-									</div> */}
 			</div>
-			<div className="flex w-full flex-col items-start justify-between md:flex-row md:items-center">
+			<div className="pb-6 flex w-full flex-col items-start justify-between md:flex-row md:items-center">
 				<span className="text-muted-foreground text-sm">
 					<NumberFlow value={total} /> artworks found
 				</span>
@@ -401,6 +346,47 @@ export function SearchResultsSkeleton({
 						<Skeleton className="h-4 w-1/2" />
 					</div>
 				))}
+		</div>
+	);
+}
+
+export function SidebarTrigger({
+	className,
+	onClick,
+	...props
+}: React.ComponentProps<typeof Button>) {
+	const { toggleSidebar } = useSidebar();
+
+	return (
+		<Button
+			data-sidebar="trigger"
+			data-slot="sidebar-trigger"
+			variant="ghost"
+			size="icon"
+			className={cn("size-7", className)}
+			onClick={(event) => {
+				onClick?.(event);
+				toggleSidebar();
+			}}
+			{...props}
+		>
+			<FilterIcon />
+			<span className="sr-only">Toggle Filters</span>
+		</Button>
+	);
+}
+
+export function ResultsCount() {
+	const total = useStore(store, (state) => state.total);
+	const loaded = useStore(store, (state) => state.loaded);
+	return (
+		<div>
+			<span>
+				<NumberFlow value={total} /> artworks found
+			</span>
+			<span className="ml-2 text-muted-foreground">
+				Fetched <NumberFlow value={loaded} />
+			</span>
 		</div>
 	);
 }

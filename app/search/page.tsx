@@ -1,4 +1,5 @@
 import { Container } from "@/components/container";
+import { Footer } from "@/components/footer";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { orpc } from "@/lib/api/client.server";
