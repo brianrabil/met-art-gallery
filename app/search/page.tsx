@@ -26,36 +26,36 @@ export default async function SearchPage({
 	const queryParams = await loadSearchParams(searchParams);
 	const queryClient = new QueryClient();
 
-	// The results of this query will be cached like a normal query
-	void queryClient.prefetchInfiniteQuery(
-		orpc.met.searchArtworks.infiniteOptions({
-			input: (pageParam) => ({
-				pagination: {
-					limit: queryParams.limit,
-					offset: pageParam * queryParams.limit,
-				},
-				sort: {
-					direction: queryParams.direction ?? undefined,
-					field: queryParams.field ?? undefined,
-				},
-				artistOrCulture: queryParams.artistOrCulture ?? undefined,
-				dateBegin: queryParams.dateBegin ?? undefined,
-				dateEnd: queryParams.dateEnd ?? undefined,
-				geoLocation: queryParams.geoLocation ?? undefined,
-				departmentId: queryParams.departmentId ?? undefined,
-				hasImages: queryParams.hasImages ?? undefined,
-				isHighlight: queryParams.isHighlight ?? undefined,
-				isOnView: queryParams.isOnView ?? undefined,
-				medium: queryParams.medium ?? undefined,
-				q: queryParams.q ?? undefined,
-				tags: queryParams.tags ?? undefined,
-				title: queryParams.title ?? undefined,
-			}),
-			initialPageParam: queryParams.offset ?? 0,
-			getNextPageParam: (lastPage) => lastPage.nextPage,
-			pages: 3,
-		}),
-	);
+	// // The results of this query will be cached like a normal query
+	// void queryClient.prefetchInfiniteQuery(
+	// 	orpc.met.searchArtworks.infiniteOptions({
+	// 		input: (pageParam) => ({
+	// 			pagination: {
+	// 				limit: queryParams.limit,
+	// 				offset: pageParam * queryParams.limit,
+	// 			},
+	// 			sort: {
+	// 				direction: queryParams.direction ?? undefined,
+	// 				field: queryParams.field ?? undefined,
+	// 			},
+	// 			artistOrCulture: queryParams.artistOrCulture ?? undefined,
+	// 			dateBegin: queryParams.dateBegin ?? undefined,
+	// 			dateEnd: queryParams.dateEnd ?? undefined,
+	// 			geoLocation: queryParams.geoLocation ?? undefined,
+	// 			departmentId: queryParams.departmentId ?? undefined,
+	// 			hasImages: queryParams.hasImages ?? undefined,
+	// 			isHighlight: queryParams.isHighlight ?? undefined,
+	// 			isOnView: queryParams.isOnView ?? undefined,
+	// 			medium: queryParams.medium ?? undefined,
+	// 			q: queryParams.q ?? undefined,
+	// 			tags: queryParams.tags ?? undefined,
+	// 			title: queryParams.title ?? undefined,
+	// 		}),
+	// 		initialPageParam: queryParams.offset ?? 0,
+	// 		getNextPageParam: (lastPage) => lastPage.nextPage,
+	// 		pages: 3,
+	// 	}),
+	// );
 
 	const dehydratedState = dehydrate(queryClient);
 

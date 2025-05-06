@@ -11,10 +11,12 @@ import { AsyncQueuer } from "@tanstack/pacer";
 import { z } from "zod";
 
 const getArtworks = publicRoute
-	// .input(paginationSchema.and(sortSchema))
 	.handler(async () => {
 		return await $fetch("/objects", {
 			throw: true,
+			next: {
+				tags: ["met-objects"],
+			},
 		});
 	})
 	.callable();
@@ -59,6 +61,10 @@ const searchArtworks = publicRoute
 		const { total, objectIDs } = await $fetch("/search", {
 			query,
 			throw: true,
+			next: {
+				tags: ["met-search", JSON.stringify(query)],
+				revalidate: 86400, // once a day = 60 * 60 * 24 seconds				revalidate:
+			},
 		});
 
 		const offset = pagination?.offset ?? 0;
@@ -111,6 +117,10 @@ const getFeaturedArtwork = publicRoute
 				objectID: randomId,
 			},
 			throw: true,
+			next: {
+				tags: ["met-object", String(randomId)],
+				revalidate: 86400, // once a day = 60 * 60 * 24 seconds				revalidate:
+			},
 		});
 	})
 	.callable();
@@ -119,6 +129,10 @@ const getDepartments = publicRoute
 	.handler(async () => {
 		return await $fetch("/departments", {
 			throw: true,
+			next: {
+				tags: ["met-departments"],
+				revalidate: 86400, // once a day = 60 * 60 * 24 seconds				revalidate:
+			},
 		});
 	})
 	.callable();
@@ -145,7 +159,7 @@ const sync = adminRoute
 		const { data, error } = await $fetch("/objects", {
 			next: {
 				revalidate: 86400, // once a day = 60 * 60 * 24 seconds
-				tags: ["met", "objects"],
+				tags: ["met-objects"],
 			},
 		});
 
@@ -166,13 +180,10 @@ const sync = adminRoute
 
 		await Promise.all(
 			data.objectIDs.map(async (objectID) => {
+				// We cache these client-side
 				const object = await $fetch("/objects/:objectID", {
 					params: { objectID },
 					throw: true,
-					// next: {
-					// 	revalidate: 86400, // once a day = 60 * 60 * 24 seconds
-					// 	tags: ["met", "objects", String(objectID)],
-					// },
 				});
 				if (object?.isPublicDomain) {
 					console.info("Synced artwork", object);

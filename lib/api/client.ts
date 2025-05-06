@@ -6,7 +6,6 @@ import type { RouterClient } from "@orpc/server";
 
 const link = new RPCLink({
 	url: (url) => {
-		console.log(url);
 		if (typeof window === "undefined") {
 			throw new Error("RPCLink is not allowed on the server side.");
 		}

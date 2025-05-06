@@ -29,13 +29,13 @@ export function ArtworkCard({
 			>
 				<div className="relative  w-full h-full overflow-hidden p-0 duration-700">
 					{object?.primaryImageSmall ? (
-						<Image
+						<img
 							src={object.primaryImageSmall}
 							alt={object.title || "Untitled"}
-							fill
+							// fill
 							className="object-cover absolute inset-0"
-							sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-							priority
+							// sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+							// priority
 						/>
 					) : (
 						<div className="p-6 flex h-full w-full items-center justify-center">

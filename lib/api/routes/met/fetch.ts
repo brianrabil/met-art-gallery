@@ -3,11 +3,6 @@ import { z } from "zod";
 
 export const $fetch = createFetch({
 	baseURL: "https://collectionapi.metmuseum.org/public/collection/v1",
-	// cache: "force-cache",
-	// next: {
-	// 	// NOTE: revalidate once per day
-	// 	revalidate: 86400,
-	// },
 	schema: createSchema({
 		"/departments": {
 			output: z.object({
