@@ -10,7 +10,7 @@ export function CookieConsent() {
 					much deserved reward to the senses after consuming bland but
 					nutritious meals. Accepting our cookies is optional but recommended,
 					as they are delicious. See our{" "}
-					<Link passHref href="/cookie-policy">
+					<Link passHref href="/legal/cookies">
 						<Button variant="link">cookie policy</Button>
 					</Link>
 					.

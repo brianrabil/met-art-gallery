@@ -69,7 +69,7 @@ export default function Page() {
 							and unlock digital downloads and an Apple Wallet NFT card.
 						</p>
 						<div className="mt-8 flex justify-center gap-4 lg:justify-start">
-							<Link href="#get-started" passHref>
+							<Link href="/auth/sign-up" passHref>
 								<Button
 									size="lg"
 									className="text-base sm:text-lg py-4 font-medium"
@@ -260,7 +260,7 @@ export default function Page() {
 						</p>
 						<div className="mt-10 flex items-center justify-center gap-x-6">
 							<Link
-								href="/signup"
+								href="/auth/sign-up"
 								className="mt-8 inline-block rounded-lg bg-background px-8 py-4 text-lg font-semibold text-primary shadow-lg hover:shadow-xl transition-colors hover:bg-muted"
 							>
 								Upload a Room Photo

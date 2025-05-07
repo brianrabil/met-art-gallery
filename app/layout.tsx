@@ -37,9 +37,11 @@ export const metadata: Metadata = {
 export default function RootLayout({
 	children,
 	header,
+	footer,
 }: Readonly<{
 	children: React.ReactNode;
 	header: React.ReactNode;
+	footer: React.ReactNode;
 }>) {
 	return (
 		<html lang="en" suppressHydrationWarning>
@@ -50,6 +52,7 @@ export default function RootLayout({
 						<div className="min-h-screen flex flex-col bg-background">
 							{header}
 							<main className="flex-1 w-full flex flex-col">{children}</main>
+							{footer}
 						</div>
 						<Toaster />
 					</Providers>

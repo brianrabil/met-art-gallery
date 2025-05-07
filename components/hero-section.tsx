@@ -51,7 +51,7 @@ export default function HeroSection({
 							artwork, artifacts, and historical objects from around the world.
 						</p>
 						<div className="flex flex-wrap gap-4">
-							<Link passHref href="/search" prefetch>
+							<Link passHref href="/gallery" prefetch>
 								<Button
 									size="lg"
 									className="bg-background hover:bg-background/80 text-foreground hover:text-foreground"
@@ -99,7 +99,7 @@ export default function HeroSection({
 				{/* Attribution */}
 				<div className="absolute bottom-4 right-4 z-10">
 					<Link
-						href={`/object/${object?.objectID}`}
+						href={`/gallery/${object?.objectID}`}
 						className="text-xs text-white/70 hover:text-white bg-black/30 px-2 py-1 rounded-md backdrop-blur-sm"
 					>
 						{object?.title}{" "}

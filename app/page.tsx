@@ -71,7 +71,7 @@ export default async function Home() {
 					</div>
 					<div className="flex justify-center py-12">
 						<Button variant="outline" asChild>
-							<Link href="/search" prefetch>
+							<Link href="/gallery" prefetch>
 								Explore the full collection
 								<ArrowRightIcon />
 							</Link>

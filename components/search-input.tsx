@@ -1,4 +1,4 @@
-import { searchParamsParsers } from "@/app/search/_search-params";
+import { searchParamsParsers } from "@/app/gallery/_search-params";
 import { Spinner } from "@/components/spinner";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";

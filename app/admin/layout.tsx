@@ -10,7 +10,7 @@ export default async function Layout({
 	const user = await client.users.getAuthedUser();
 
 	if (user?.role !== "admin") {
-		redirect("/dashboard", RedirectType.replace);
+		redirect("/", RedirectType.replace);
 	}
 
 	return <div>{children}</div>;

@@ -19,7 +19,7 @@ export default async function DashboardLayout({
 			<ul>
 				{user?.role === "admin" && (
 					<li>
-						<Link href="/dashboard/amin">Admin</Link>
+						<Link href="/admin">Admin</Link>
 					</li>
 				)}
 			</ul>

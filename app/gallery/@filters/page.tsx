@@ -12,12 +12,11 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Separator } from "@/components/ui/separator";
-import { Skeleton } from "@/components/ui/skeleton";
 import { orpc } from "@/lib/api/client";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { XIcon } from "lucide-react";
 import { useQueryStates } from "nuqs";
-import { searchParamsParsers } from "./_search-params";
+import { searchParamsParsers } from "./../_search-params";
 
 const TIME_PERIODS = [
 	{ label: "Ancient (before 500 CE)", startDate: 0, endDate: 500 },
@@ -46,7 +45,7 @@ const MEDIUMS = [
 	"Works on paper",
 ];
 
-export function FilterSidebar({ isSheet = false }) {
+export default function FilterSidebar() {
 	const [searchParams, setSearchParams] = useQueryStates(searchParamsParsers);
 
 	const { data: departments } = useSuspenseQuery(
@@ -104,7 +103,7 @@ export function FilterSidebar({ isSheet = false }) {
 	}
 
 	return (
-		<div className={`${isSheet ? "" : "w-full bg-background pt-24"}`}>
+		<div className={"w-full bg-background pt-24"}>
 			<Container className="mr-0 pr-0">
 				<div className="flex items-center justify-between mb-4">
 					<h2 className="text-xl font-semibold font-serif">Filters</h2>
@@ -338,80 +337,6 @@ export function FilterSidebar({ isSheet = false }) {
 						</AccordionContent>
 					</AccordionItem>
 				</Accordion>
-			</Container>
-		</div>
-	);
-}
-
-export function FilterSidebarSkeleton({ isSheet = false }) {
-	return (
-		<div className={`${isSheet ? "" : "w-full h-full bg-background pt-24"}`}>
-			<Container>
-				{/* Header */}
-				<div className="flex items-center justify-between mb-4">
-					<Skeleton className="h-6 w-24" /> {/* Placeholder for "Filters" */}
-					<Skeleton className="h-6 w-16" /> {/* Placeholder for "Clear all" */}
-				</div>
-
-				{/* Active Filters */}
-				<div className="mb-4">
-					<div className="flex flex-wrap gap-2 mb-2">
-						{/* Placeholder for active filter badges */}
-						<Skeleton className="h-6 w-20" />
-						<Skeleton className="h-6 w-24" />
-						<Skeleton className="h-6 w-16" />
-					</div>
-					<Skeleton className="h-px w-full my-4" /> {/* Separator */}
-				</div>
-
-				{/* Accordion Skeleton */}
-				<div className="space-y-4">
-					{/* Time Period Accordion Item */}
-					<div>
-						<Skeleton className="h-6 w-32 mb-2" /> {/* Accordion Trigger */}
-						<div className="space-y-2">
-							{/* Radio Group Placeholders */}
-							<Skeleton className="h-4 w-full" />
-							<Skeleton className="h-4 w-full" />
-							<Skeleton className="h-4 w-full" />
-							<Skeleton className="h-4 w-full" />
-							<Skeleton className="h-4 w-full" />
-							<Skeleton className="h-4 w-full" />
-							<Skeleton className="h-4 w-full" />
-						</div>
-					</div>
-
-					{/* Department Accordion Item */}
-					<div>
-						<Skeleton className="h-6 w-32 mb-2" /> {/* Accordion Trigger */}
-						<div className="space-y-2">
-							{/* Radio Group Placeholders */}
-							<Skeleton className="h-4 w-full" />
-							<Skeleton className="h-4 w-full" />
-							<Skeleton className="h-4 w-full" />
-							<Skeleton className="h-4 w-full" />
-							<Skeleton className="h-4 w-full" />
-						</div>
-					</div>
-
-					{/* Medium Accordion Item */}
-					<div>
-						<Skeleton className="h-6 w-32 mb-2" /> {/* Accordion Trigger */}
-						<div className="space-y-2">
-							{/* Radio Group Placeholders */}
-							<Skeleton className="h-4 w-full" />
-							<Skeleton className="h-4 w-full" />
-							<Skeleton className="h-4 w-full" />
-							<Skeleton className="h-4 w-full" />
-							<Skeleton className="h-4 w-full" />
-							<Skeleton className="h-4 w-full" />
-							<Skeleton className="h-4 w-full" />
-							<Skeleton className="h-4 w-full" />
-							<Skeleton className="h-4 w-full" />
-							<Skeleton className="h-4 w-full" />
-						</div>
-					</div>
-				</div>
 			</Container>
 		</div>
 	);

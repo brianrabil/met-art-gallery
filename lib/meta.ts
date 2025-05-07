@@ -33,11 +33,11 @@ export const meta = {
 		],
 		support: [{ name: "Help Center", href: "/help-center" }],
 		legal: [
-			{ name: "Terms of Service", href: "/terms" },
+			{ name: "Terms of Service", href: "/legal/terms" },
 			// { name: "Refunds", href: "/refunds" },
-			{ name: "Privacy Policy", href: "/privacy" },
-			{ name: "Cookie Policy", href: "/cookies" },
-			{ name: "Accessibility", href: "/accessibility" },
+			{ name: "Privacy Policy", href: "/legal/privacy" },
+			{ name: "Cookie Policy", href: "/legal/cookies" },
+			{ name: "Accessibility", href: "/legal/accessibility" },
 		],
 	},
 

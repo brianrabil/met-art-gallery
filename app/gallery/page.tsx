@@ -1,5 +1,4 @@
 "use client";
-
 import { ArtObjectCardSkeleton, ArtworkCard } from "@/components/artwork-card";
 import { Spinner } from "@/components/spinner";
 import { Button } from "@/components/ui/button";
@@ -11,22 +10,22 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
-import { useSidebar } from "@/components/ui/sidebar";
-import { Skeleton } from "@/components/ui/skeleton";
 import { orpc } from "@/lib/api/client";
-import { cn } from "@/lib/utils";
 import NumberFlow from "@number-flow/react";
 import {
 	useSuspenseInfiniteQuery,
 	useSuspenseQuery,
 } from "@tanstack/react-query";
-import { Store, useStore } from "@tanstack/react-store";
 import { useVirtualizer } from "@tanstack/react-virtual";
-import { BoxIcon, FilterIcon } from "lucide-react";
+import { BoxIcon } from "lucide-react";
 import { useQueryStates } from "nuqs";
+import { createLoader } from "nuqs/server";
 import type React from "react";
 import { Suspense, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { searchParamsParsers } from "./_search-params";
+import { store } from "./_store";
+
+const loadSearchParams = createLoader(searchParamsParsers);
 
 const sortOptions = [
 	{ name: "Most Popular", href: "#", current: true },
@@ -36,12 +35,7 @@ const sortOptions = [
 
 const MIN_CARD_WIDTH = 320;
 
-export const store = new Store({
-	total: 0,
-	loaded: 0,
-});
-
-export function SearchResults() {
+export default function SearchResults() {
 	const [{ limit, offset, ...searchParams }] =
 		useQueryStates(searchParamsParsers);
 
@@ -143,7 +137,7 @@ export function SearchResults() {
 	// 			} else {
 	// 				elementScroll(interpolated, canSmooth, instance);
 	// 			}
-	// 		};
+	// };
 
 	// 		requestAnimationFrame(run);
 	// 	},
@@ -228,12 +222,10 @@ export function SearchResults() {
 								);
 							}
 
-							// const LANES = rowVirtualizer.options.lanes ?? 3;
-							// const laneWidth = `${100 / LANES}%`;
-							// const left = `calc(${virtualRow.lane * (100 / LANES)}%)`;
 							const laneCount = rowVirtualizer.options.lanes ?? 1;
 							const laneWidth = `${100 / laneCount}%`;
 							const left = `calc(${virtualRow.lane * (100 / laneCount)}%)`;
+
 							return (
 								<div
 									key={virtualRow.key}
@@ -274,7 +266,7 @@ export function SearchResults() {
 	);
 }
 
-export function SearchResultsHeader({
+function SearchResultsHeader({
 	total,
 }: {
 	total: number;
@@ -347,66 +339,4 @@ function SuspensedArtObjectCard({
 		}),
 	);
 	return <ArtworkCard style={style} object={object} />;
-}
-
-export function SearchResultsSkeleton({
-	limit = 12,
-}: {
-	limit?: number;
-}) {
-	return (
-		<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-			{Array(limit)
-				.fill(0)
-				.map((_, i) => (
-					// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-					<div key={i} className="space-y-3">
-						<Skeleton className="h-[200px] w-full rounded-lg" />
-						<Skeleton className="h-4 w-3/4" />
-						<Skeleton className="h-4 w-1/2" />
-					</div>
-				))}
-		</div>
-	);
-}
-
-export function SidebarTrigger({
-	className,
-	onClick,
-	...props
-}: React.ComponentProps<typeof Button>) {
-	const { toggleSidebar } = useSidebar();
-
-	return (
-		<Button
-			data-sidebar="trigger"
-			data-slot="sidebar-trigger"
-			variant="ghost"
-			size="icon"
-			className={cn("size-7", className)}
-			onClick={(event) => {
-				onClick?.(event);
-				toggleSidebar();
-			}}
-			{...props}
-		>
-			<FilterIcon />
-			<span className="sr-only">Toggle Filters</span>
-		</Button>
-	);
-}
-
-export function ResultsCount() {
-	const total = useStore(store, (state) => state.total);
-	const loaded = useStore(store, (state) => state.loaded);
-	return (
-		<div>
-			<span>
-				<NumberFlow value={total} /> artworks found
-			</span>
-			<span className="ml-2 text-muted-foreground">
-				Fetched <NumberFlow value={loaded} />
-			</span>
-		</div>
-	);
 }

@@ -10,6 +10,9 @@ const nextConfig: NextConfig = {
 	images: {
 		domains: ["images.metmuseum.org"],
 	},
+	turbopack: {
+		resolveExtensions: [".js", ".jsx", ".md", ".mdx", ".ts", ".tsx"],
+	},
 };
 
 const withMDX = createMDX({});

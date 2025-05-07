@@ -14,7 +14,7 @@ export function ArtworkCard({
 	object: Partial<InferRouterOutputs<typeof router.met.getArtworkById>>;
 }) {
 	return (
-		<Link passHref href={`/object/${object?.objectID}`}>
+		<Link passHref href={`/gallery/${object?.objectID}`}>
 			<Card
 				style={style}
 				className="bg-transparent border-none group relative h-[500] w-full p-4 overflow-hidden rounded-none shadow-none"

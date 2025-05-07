@@ -14,6 +14,10 @@ if (!process.env.GITHUB_CLIENT_SECRET) {
 }
 
 export const auth = betterAuth({
+	baseURL: process.env.NEXT_PUBLIC_BASE_URL,
+	cors: {
+		origin: process.env.NEXT_PUBLIC_BASE_URL,
+	},
 	database: drizzleAdapter(db, {
 		provider: "sqlite",
 		usePlural: true,

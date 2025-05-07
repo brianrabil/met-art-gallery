@@ -87,7 +87,7 @@ export default function PrivacyPage() {
 					<h2 className="text-2xl font-semibold">7. Cookies</h2>
 					<p>
 						See our{" "}
-						<Link href="/cookie-policy" className="underline">
+						<Link href="/legal/cookies" className="underline">
 							Cookie Policy
 						</Link>{" "}
 						for details on the cookies we use.
