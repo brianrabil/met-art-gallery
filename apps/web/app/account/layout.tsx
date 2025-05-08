@@ -1,5 +1,6 @@
 import { client } from "@/lib/api.server";
 import { QueryClient } from "@tanstack/react-query";
+import { headers } from "next/headers";
 import Link from "next/link";
 
 export default async function DashboardLayout({
@@ -8,7 +9,14 @@ export default async function DashboardLayout({
 	children: React.ReactNode;
 }) {
 	// const queryClient = new QueryClient();
-	const user = await client.users.getAuthedUser();
+	const user = await client.users.getAuthedUser(
+		{},
+		{
+			context: {
+				headers: await headers(),
+			},
+		},
+	);
 
 	return (
 		<div className="my-16">
