@@ -1,0 +1,24 @@
+{
+	"name": "@repo/api",
+	"private": true,
+	"devDependencies": {
+		"@types/bun": "latest"
+	},
+	"peerDependencies": {
+		"typescript": "^5"
+	},
+	"dependencies": {
+		"@orpc/client": "^1.1.0",
+		"@orpc/contract": "^1.1.1",
+		"@orpc/react": "^1.1.0",
+		"@orpc/react-query": "^1.1.0",
+		"@orpc/server": "^1.1.0",
+		"zod": "^3.24.4",
+		"@repo/db": "workspace:*",
+		"@repo/met-art-sdk": "workspace:*",
+		"@repo/utils": "workspace:*"
+	},
+	"exports": {
+		"./*": "./src/*.ts"
+	}
+}

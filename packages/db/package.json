@@ -1,0 +1,31 @@
+{
+	"name": "@repo/db",
+	"type": "module",
+	"private": true,
+	"scripts": {
+		"db:dev": "turso dev --db-file=dev.db",
+		"db:push": "drizzle-kit push",
+		"db:generate": "drizzle-kit generate",
+		"db:migrate": "drizzle-kit migrate",
+		"db:studio": "drizzle-kit studio",
+		"auth:generate": "bunx --bun @better-auth/cli@latest generate --config=../auth/src/auth.ts --output=./src/schemas/auth.generated.ts -y"
+	},
+	"devDependencies": {
+		"@types/bun": "latest",
+		"drizzle-kit": "^0.31.1"
+	},
+	"peerDependencies": {
+		"typescript": "^5"
+	},
+	"dependencies": {
+		"@dotenvx/dotenvx": "^1.42.2",
+		"better-auth": "^1.2.7",
+		"drizzle-orm": "^0.43.1",
+		"@libsql/client": "^0.15.4"
+	},
+	"exports": {
+		".": "./src/index.ts",
+		"./*": "./src/*.ts",
+		"./schema": "./src/schemas/index.ts"
+	}
+}

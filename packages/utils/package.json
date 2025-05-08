@@ -1,0 +1,21 @@
+{
+	"name": "@repo/utils",
+	"private": true,
+	"scripts": {
+		"pull-env": "bun run ./tasks/gen-env.ts"
+	},
+	"devDependencies": {
+		"@types/bun": "latest"
+	},
+	"peerDependencies": {
+		"typescript": "^5"
+	},
+	"dependencies": {
+		"@dotenvx/dotenvx": "^1.42.2",
+		"@t3-oss/env-core": "^0.13.4",
+		"zod": "^3.24.4"
+	},
+	"exports": {
+		"./*": "./src/*.ts"
+	}
+}

@@ -1,0 +1,9 @@
+
+[0m[2m[35m$[0m [2m[1mdotenvx run --convention=nextjs -- bunx @better-auth/cli@latest generate[0m
+[38;5;142m[dotenvx@1.42.2] injecting env (9) from .env.local[39m
+  🔍 Resolving [1/1] [23D[0K  🔍 @better-auth/cli [3/2] [30D[0K  📦 Installing [51/193] [27D[0K  📦 Installing [52/193] [27D[0K  📦 Installing [63/193] [27D[0K  📦 Installing [78/193] [27D[0K  📦 Installing [86/193] [27D[0K  📦 Installing [96/193] [27D[0K  📦 Installing [106/193] [28D[0K  📦 Installing [125/193] [28D[0K  📦 Installing [138/193] [28D[0K  📦 Installing [171/193] [28D[0K  🔍 Resolving... [20D[0K  🔍 Resolving... [20D[0K  🔍 Resolving... [20D[0K  🔍 Resolving... [20D[0K  🔒 Saving lockfile... [26D[0K[38;5;142m[dotenvx@1.42.2] injecting env (0) from .env.local[39m
+[38;5;142m[dotenvx@1.42.2] injecting env (0) from .env.local[39m
+[?25l[1G[36m⠋[39m preparing schema...[?25h[1G[0K[?25l[2K[1G[36m?[39m [1mDo you want to generate the schema to [33m./auth-schema.ts[39m?[22m [90m›[39m [90m(y/N)[39m[2K[G[2K[1G[32m✔[39m [1mDo you want to generate the schema to [33m./auth-schema.ts[39m?[22m [90m…[39m no
+[?25h[2m2025-05-08T18:11:49.216Z[0m [31mERROR[0m [1m[Better Auth]:[0m Schema generation aborted.
+Command failed with exit code 1: /Users/brian/.nvm/versions/node/v23.5.0/bin/bunx @better-auth/cli@latest generate
+[0m[31merror[0m[2m:[0m script [1m"auth:generate"[0m exited with code 1[0m
