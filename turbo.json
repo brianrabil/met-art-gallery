@@ -1,57 +1,34 @@
 {
 	"$schema": "https://turborepo.com/schema.json",
+	"globalEnv": [
+		"BETTER_AUTH_SECRET",
+		"BETTER_AUTH_URL",
+		"ENCRYPTION_KEY",
+		"TURSO_AUTH_TOKEN",
+		"TURSO_DATABASE_URL",
+		"TURSO_SYNC_URL",
+		"GITHUB_CLIENT_ID",
+		"GITHUB_CLIENT_SECRET"
+	],
 	"tasks": {
 		"build": {
 			"dependsOn": ["^build"],
-			"outputs": [".next/**", "!.next/cache/**"],
-			"env": [
-				"BETTER_AUTH_SECRET",
-				"BETTER_AUTH_URL",
-				"ENCRYPTION_KEY",
-				"TURSO_AUTH_TOKEN",
-				"TURSO_DATABASE_URL",
-				"TURSO_SYNC_URL"
-			]
+			"outputs": [".next/**", "!.next/cache/**"]
 		},
 		"dev": {
 			"persistent": true,
 			"cache": false,
-			"with": ["db:dev"],
-			"env": [
-				"BETTER_AUTH_SECRET",
-				"BETTER_AUTH_URL",
-				"ENCRYPTION_KEY",
-				"TURSO_AUTH_TOKEN",
-				"TURSO_DATABASE_URL",
-				"TURSO_SYNC_URL"
-			]
+			"with": ["db:dev"]
 		},
 		"db:dev": {
 			"persistent": true,
-			"cache": false,
-			"env": [
-				"ENCRYPTION_KEY",
-				"TURSO_AUTH_TOKEN",
-				"TURSO_DATABASE_URL",
-				"TURSO_SYNC_URL"
-			]
-		},
-		"auth:generate": {
-			"env": [
-				"BETTER_AUTH_SECRET",
-				"BETTER_AUTH_URL",
-				"GITHUB_CLIENT_ID",
-				"GITHUB_CLIENT_SECRET"
-			]
+			"cache": false
 		},
 		"db:push": {
-			"cache": false,
-			"env": [
-				"ENCRYPTION_KEY",
-				"TURSO_AUTH_TOKEN",
-				"TURSO_DATABASE_URL",
-				"TURSO_SYNC_URL"
-			]
+			"cache": false
+		},
+		"db:migrate": {
+			"cache": false
 		},
 		"lint": {
 			"dependsOn": ["//#biome:check"]
@@ -59,9 +36,6 @@
 		"lint:fix": {
 			"dependsOn": ["//#biome:check:fix"],
 			"cache": false
-		},
-		"check-types": {
-			"dependsOn": ["^check-types"]
 		},
 		"//#biome:check": {},
 		"//#biome:check:fix": {
