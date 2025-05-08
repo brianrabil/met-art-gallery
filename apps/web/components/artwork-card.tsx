@@ -1,8 +1,8 @@
 "use client";
 
 import { Skeleton } from "@/components/ui/skeleton";
-import type { router } from "@/lib/api/root";
 import type { InferRouterOutputs } from "@orpc/server";
+import type { router } from "@repo/api/router";
 import Link from "next/link";
 import { Card, CardDescription, CardHeader, CardTitle } from "./ui/card";
 

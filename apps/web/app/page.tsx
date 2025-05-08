@@ -2,7 +2,7 @@ import { ArtworkCard } from "@/components/artwork-card";
 import { Container } from "@/components/container";
 import HeroSection from "@/components/hero-section";
 import { Button } from "@/components/ui/button";
-import { client } from "@/lib/api/client.server";
+import { client } from "@/lib/api.server";
 import { ArrowRightIcon } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";

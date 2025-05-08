@@ -1,6 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { orpc } from "@/lib/api/client";
+import { api } from "@/lib/api";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { Calendar, Globe, Tag, User } from "lucide-react";
 import Image from "next/image";
@@ -10,7 +10,7 @@ export default function Page({ params }: { params: { slug: string } }) {
 	const { slug } = params;
 
 	const { data: artwork } = useSuspenseQuery(
-		orpc.met.getArtworkById.queryOptions({
+		api.met.getArtworkById.queryOptions({
 			input: Number.parseInt(slug),
 		}),
 	);

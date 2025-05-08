@@ -13,6 +13,12 @@ const nextConfig: NextConfig = {
 	turbopack: {
 		resolveExtensions: [".js", ".jsx", ".md", ".mdx", ".ts", ".tsx"],
 	},
+	transpilePackages: [
+		"@repo/auth",
+		"@repo/api",
+		"@repo/utils",
+		"@repo/met-art-sdk",
+	],
 };
 
 const withMDX = createMDX({});

@@ -1,4 +1,4 @@
-import { orpc } from "@/lib/api/client.server";
+import { client } from "@/lib/api.server";
 import { QueryClient } from "@tanstack/react-query";
 import Link from "next/link";
 
@@ -7,11 +7,8 @@ export default async function DashboardLayout({
 }: {
 	children: React.ReactNode;
 }) {
-	const queryClient = new QueryClient();
-
-	const user = await queryClient.ensureQueryData(
-		orpc.users.getAuthedUser.queryOptions(),
-	);
+	// const queryClient = new QueryClient();
+	const user = await client.users.getAuthedUser();
 
 	return (
 		<div className="my-16">

@@ -2,7 +2,7 @@ import { createORPCClient } from "@orpc/client";
 import { RPCLink } from "@orpc/client/fetch";
 import { createORPCReactQueryUtils } from "@orpc/react-query";
 import type { RouterClient } from "@orpc/server";
-import type { router } from "@repo/api/app";
+import type { router } from "../router";
 
 const link = new RPCLink({
 	url: (url) => {
@@ -15,4 +15,4 @@ const link = new RPCLink({
 });
 
 export const client: RouterClient<typeof router> = createORPCClient(link);
-export const orpc = createORPCReactQueryUtils(client);
+export const api = createORPCReactQueryUtils(client);

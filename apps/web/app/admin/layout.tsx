@@ -1,4 +1,4 @@
-import { client } from "@/lib/api/client.server";
+import { client } from "@/lib/api.server";
 import { RedirectType, redirect } from "next/navigation";
 import type * as React from "react";
 

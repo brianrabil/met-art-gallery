@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Separator } from "@/components/ui/separator";
-import { orpc } from "@/lib/api/client";
+import { api } from "@/lib/api";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { XIcon } from "lucide-react";
 import { useQueryStates } from "nuqs";
@@ -49,7 +49,7 @@ export default function FilterSidebar() {
 	const [searchParams, setSearchParams] = useQueryStates(searchParamsParsers);
 
 	const { data: departments } = useSuspenseQuery(
-		orpc.met.getDepartments.queryOptions(),
+		api.met.getDepartments.queryOptions(),
 	);
 
 	const clearAllFilters = () => {

@@ -3,8 +3,7 @@
 	"type": "module",
 	"private": true,
 	"scripts": {
-		"auth:secret": "bunx @better-auth/cli@latest secret",
-		"auth:generate": "dotenvx run --convention=nextjs -- bunx @better-auth/cli@latest generate"
+		"auth:secret": "bunx @better-auth/cli@latest secret"
 	},
 	"dependencies": {
 		"@repo/db": "workspace:*",

@@ -1,4 +1,4 @@
-import { objectSchemaKeys } from "@/lib/api/routes/met/schema";
+import { objectSchemaKeys } from "@repo/met-art-sdk/schema";
 import {
 	parseAsBoolean,
 	parseAsInteger,

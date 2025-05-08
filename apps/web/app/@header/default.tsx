@@ -1,29 +1,20 @@
 "use client";
 
-import { AnimatedTabs, tabStore } from "@/components/animated-tabs";
-import {
-	ButtonBackgroundShine,
-	ButtonRotateBorder,
-} from "@/components/buttons";
+import { AnimatedTabs } from "@/components/animated-tabs";
 import { Container } from "@/components/container";
 import { Logo } from "@/components/logo";
-import { ModeToggle } from "@/components/mode-toggle";
 import { SearchInput } from "@/components/search-input";
 import { ThemeSwitcher } from "@/components/theme-switcher";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import {
 	Sheet,
 	SheetContent,
 	SheetHeader,
 	SheetTrigger,
 } from "@/components/ui/sheet";
-import { orpc } from "@/lib/api/client";
 import { meta } from "@/lib/meta";
 import { cn } from "@/lib/utils";
 import { SignedIn, SignedOut, UserButton } from "@daveyplate/better-auth-ui";
-import { useMutation } from "@tanstack/react-query";
-import { useStore } from "@tanstack/react-store";
 import { MenuIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";

@@ -1,13 +1,13 @@
 "use client";
 
 import { Logo } from "@/components/logo";
-import { orpc } from "@/lib/api/client";
+import { api } from "@/lib/api";
 import { AuthCard } from "@daveyplate/better-auth-ui";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 
 export function AuthView({ pathname }: { pathname: string }) {
-	const { data } = useQuery(orpc.met.getFeaturedArtwork.queryOptions());
+	const { data } = useQuery(api.met.getFeaturedArtwork.queryOptions());
 
 	return (
 		<div className="grid min-h-svh lg:grid-cols-2">

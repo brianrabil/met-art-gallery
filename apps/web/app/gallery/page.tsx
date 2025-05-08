@@ -10,7 +10,7 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
-import { orpc } from "@/lib/api/client";
+import { api } from "@/lib/api";
 import NumberFlow from "@number-flow/react";
 import {
 	useSuspenseInfiniteQuery,
@@ -67,7 +67,7 @@ export default function SearchResults() {
 		isPending,
 		error,
 	} = useSuspenseInfiniteQuery(
-		orpc.met.searchArtworks.infiniteOptions({
+		api.met.searchArtworks.infiniteOptions({
 			input: (pageParam) => ({
 				pagination: {
 					limit,
@@ -334,7 +334,7 @@ function SuspensedArtObjectCard({
 	style,
 }: { style?: React.CSSProperties; objectID: number }) {
 	const { data: object } = useSuspenseQuery(
-		orpc.met.getArtworkById.queryOptions({
+		api.met.getArtworkById.queryOptions({
 			input: objectID,
 		}),
 	);
