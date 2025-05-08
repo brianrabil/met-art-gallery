@@ -1,13 +1,14 @@
 "use client";
+
 import { Button } from "@/components/ui/button";
 import { api } from "@/lib/api";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { Calendar, Globe, Tag, User } from "lucide-react";
 import Image from "next/image";
-import { notFound } from "next/navigation";
+import { useParams } from "next/navigation";
 
-export default function Page({ params }: { params: { slug: string } }) {
-	const { slug } = params;
+export default function Page() {
+	const { slug } = useParams<{ slug: string }>();
 
 	const { data: artwork } = useSuspenseQuery(
 		api.met.getArtworkById.queryOptions({
