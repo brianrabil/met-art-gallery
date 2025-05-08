@@ -1,7 +1,15 @@
 import { client } from "@/lib/api.server";
+import { headers } from "next/headers";
 
 export default async function Page() {
-	const user = await client.users.getAuthedUser();
+	const user = await client.users.getAuthedUser(
+		{},
+		{
+			context: {
+				headers: await headers(),
+			},
+		},
+	);
 
 	return (
 		<div>
