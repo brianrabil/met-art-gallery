@@ -1,4 +1,4 @@
-import { client } from "@/lib/api/client.server";
+import { client } from "@/lib/api.server";
 
 export default async function Page() {
 	const user = await client.users.getAuthedUser();

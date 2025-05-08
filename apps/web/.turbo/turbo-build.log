@@ -1,0 +1,20 @@
+
+[0m[2m[35m$[0m [2m[1mnext build[0m
+   [1m[38;2;173;127;168m▲ Next.js 15.3.1[39m[22m
+   - Environments: .env.local
+
+ [37m[1m [22m[39m Creating an optimized production build ...
+<w> [1m[33m[webpack.cache.PackFileCacheStrategy] Skipped not serializable cache item 'Compilation/modules|javascript/auto|/Users/brian/Developer/met-art-gallery/node_modules/next/dist/build/webpack/loaders/next-flight-loader/index.js!/Users/brian/Developer/met-art-gallery/node_modules/next/dist/build/webpack/loaders/next-swc-loader.js??ruleSet[1].rules[21].use[0]!/Users/brian/Developer/met-art-gallery/node_modules/@next/mdx/mdx-js-loader.js??ruleSet[1].rules[21].use[1]!/Users/brian/Developer/met-art-gallery/apps/web/app/legal/accessiblity/content.mdx|rsc': No serializer registered for VFileMessage[39m[22m
+<w> [1m[33mwhile serializing webpack/lib/cache/PackFileCacheStrategy.PackContentItems -> webpack/lib/NormalModule -> webpack/lib/ModuleBuildError -> VFileMessage[39m[22m
+[31mFailed to compile.
+[39m
+./app/legal/accessiblity/content.mdx
+content.mdx:2:1-2:36: Unexpected `VariableDeclaration` in code: only import/exports are supported
+
+Import trace for requested module:
+./app/legal/accessiblity/content.mdx
+./app/legal/accessiblity/page.tsx
+
+
+> Build failed because of webpack errors
+[0m[31merror[0m[2m:[0m script [1m"build"[0m exited with code 1[0m
