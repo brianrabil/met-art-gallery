@@ -73,7 +73,7 @@ export const posts: Post[] = [
 		},
 	},
 	{
-		slug: "top-10-impressionist-paintings-met-modern-home",
+		slug: "top-10-impressionist-paintings-from-the-met-for-modern-homes",
 		title: "Top 10 Impressionist Paintings from The Met for Modern Home",
 		date: "2025-05-02T00:00:00.000Z",
 		coverImage:
