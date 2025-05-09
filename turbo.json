@@ -1,5 +1,6 @@
 {
 	"$schema": "https://turborepo.com/schema.json",
+	"ui": "tui",
 	"globalEnv": [
 		"BETTER_AUTH_SECRET",
 		"BETTER_AUTH_URL",
@@ -25,7 +26,9 @@
 			"cache": false
 		},
 		"db:push": {
-			"cache": false
+			"cache": false,
+			"interactive": true,
+			"with": ["db:dev"]
 		},
 		"db:migrate": {
 			"cache": false

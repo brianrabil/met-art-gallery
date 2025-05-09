@@ -175,17 +175,6 @@ const sync = admin.handler(async () => {
 			}
 		}),
 	);
-
-	await Promise.all([
-		Bun.write("./lib/generated/mediums.json", JSON.stringify([...mediums])),
-		Bun.write("./lib/generated/cultures.json", JSON.stringify([...cultures])),
-		Bun.write(
-			"./lib/generated/departments.json",
-			JSON.stringify([...departments]),
-		),
-		Bun.write("./lib/generated/tags.json", JSON.stringify([...tags])),
-	]);
-
 	console.log(`Synced ${mediums.size} mediums`);
 	console.log(`Synced ${cultures.size} cultures`);
 	console.log(`Synced ${departments.size} departments`);
